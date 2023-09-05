@@ -1,3 +1,6 @@
+En 'Back-Develop/src/app.js' se agregó un módulo llamado 'cors' que permite consumir las API´s desde Angular.
+
+Considerar lo siguiente:
 
 - 'iniciarServicios.js' inicia los servicios tanto de Back como de Front en simultáneo.
 
