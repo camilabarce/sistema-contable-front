@@ -1,0 +1,18 @@
+<mat-card>
+    <mat-card-header>
+        <button type="button" mat-icon-button color="primary" routerLink="/cuentas/list">
+            <mat-icon>arrow_back</mat-icon>
+            <h4>Volver</h4>
+        </button>
+    </mat-card-header>
+    <form class="form">
+        <mat-form-field class="campo">
+            <mat-label>
+                Ingrese el nombre de la cuenta
+            </mat-label>
+            <input matInput type="text">
+        </mat-form-field>
+        <button type="submit" mat-raised-button class="btn" color="basic" [disabled]="cuentasForm.valid">Guardar</button>    
+        
+    </form>
+</mat-card>

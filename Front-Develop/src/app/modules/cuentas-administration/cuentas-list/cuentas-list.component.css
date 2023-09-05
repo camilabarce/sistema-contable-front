@@ -1,0 +1,23 @@
+.content {
+    display: flex;
+    justify-content: center;
+} 
+.campos{
+    width: 25vw;
+    margin-right: 1rem;
+}
+.btn {
+    height: 3.4rem;
+    margin: .25rem .5rem;
+}
+
+.table {
+    display: flex;
+    justify-content: center;
+}
+.th {
+    font-weight: bold;
+}
+.btn1 {
+    margin-right: 1rem;
+}

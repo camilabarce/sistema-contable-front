@@ -1,0 +1,62 @@
+<!-- selección de grupo, bloque, rubro -->
+<mat-card>
+    <!-- encabezado -->
+    <!-- contenido -->
+    <mat-card-content class="content">
+        <!-- grupo -->
+        <mat-form-field class="campos">
+            <mat-label>Selecciona un grupo</mat-label>
+            <mat-select [(ngModel)]="grupoSeleccionado" (ngModelChange)="actualizarBloquesFiltrados()">
+                <mat-option *ngFor="let grupo of gruposBloquesRubros[0].grupo" [value]="grupo.id_grupo">{{ grupo.nombre_grupo }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <!-- bloque -->
+        <mat-form-field class="campos" *ngIf="bloquesFiltrados.length > 0">
+            <mat-label>Selecciona un bloque</mat-label>
+            <mat-select [(ngModel)]="bloqueSeleccionado" (ngModelChange)="actualizarRubrosFiltrados()">
+                <mat-option *ngFor="let bloque of bloquesFiltrados" [value]="bloque.id_bloque">{{ bloque.nombre_bloque }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <!-- rubro -->
+        <mat-form-field class="campos" *ngIf="rubrosFiltrados.length > 0">
+            <mat-label>Selecciona un rubro</mat-label>
+            <mat-select [(ngModel)]="rubroSeleccionado">
+                <mat-option *ngFor="let rubro of rubrosFiltrados" [value]="rubro.id_rubro">{{ rubro.nombre_rubro }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <button mat-button class="campos btn">Mostrar cuentas</button>
+    </mat-card-content>
+</mat-card>
+<mat-card>
+    <table class="" mat-table [dataSource]="cuentasData">
+        <!-- columna nombre -->
+        <ng-container matColumnDef="nombre">
+            <th class="th" mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let e">{{e.nombre_cuenta}}</td>
+        </ng-container>
+        <!-- columna código -->
+        <ng-container matColumnDef="codigo">
+            <th class="th" mat-header-cell *matHeaderCellDef>Código</th>
+            <td mat-cell *matCellDef="let e">{{e.cod_cuenta}}</td>
+        </ng-container>
+        <!-- columna saldo -->
+        <ng-container matColumnDef="saldo">
+            <th class="th" mat-header-cell *matHeaderCellDef>Saldo</th>
+            <td mat-cell *matCellDef="let e">{{e.saldo_cuenta}}</td>
+        </ng-container>
+        <!-- columna acciones -->
+        <ng-container matColumnDef="acciones">
+            <th class="th" mat-header-cell *matHeaderCellDef> Acciones </th>
+            <td mat-cell *matCellDef="let element">
+                <a routerLink="/cuentas/detail">
+                    <button class="btn1" mat-raised-button color="primary">Editar</button>
+                </a>
+                <button class="btn1" mat-raised-button color="warn">Eliminar</button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</mat-card>

@@ -1,0 +1,11 @@
+.form {
+    display: flex;
+    justify-content: center;
+}
+.campo {
+    width: 50vw;
+}
+.btn {
+    height: 3.4rem;
+    margin: .25rem .5rem;
+}

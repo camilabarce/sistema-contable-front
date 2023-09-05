@@ -1,0 +1,205 @@
+[
+        {
+           "grupo":[
+              {
+                 "id_grupo":1,
+                 "nombre_grupo":"Activo"
+              },
+              {
+                 "id_grupo":2,
+                 "nombre_grupo":"Pasivo"
+              },
+              {
+                 "id_grupo":3,
+                 "nombre_grupo":"Patrimonio neto"
+              },
+              {
+                 "id_grupo":4,
+                 "nombre_grupo":"Resultado"
+              }
+           ],
+           "bloque":[
+              {
+                 "id_bloque":1,
+                 "id_grupo":1,
+                 "nombre_bloque":"Corriente"
+              },
+              {
+                 "id_bloque":2,
+                 "id_grupo":1,
+                 "nombre_bloque":"No corriente"
+              },
+              {
+                 "id_bloque":1,
+                 "id_grupo":2,
+                 "nombre_bloque":"Corriente"
+              },
+              {
+                 "id_bloque":2,
+                 "id_grupo":2,
+                 "nombre_bloque":"No corriente"
+              },
+              {
+                 "id_bloque":3,
+                 "id_grupo":3,
+                 "nombre_bloque":"Capital"
+              },
+              {
+                 "id_bloque":4,
+                 "id_grupo":4,
+                 "nombre_bloque":"Ordinario"
+              },
+              {
+                 "id_bloque":5,
+                 "id_grupo":4,
+                 "nombre_bloque":"Extraordinario"
+              }
+           ],
+           "rubro":[
+              {
+                 "id_rubro":1,
+                 "id_bloque":1,
+                 "id_grupo":1,
+                 "nombre_rubro":"Caja y bancos"
+              },
+              {
+                 "id_rubro":2,
+                 "id_bloque":1,
+                 "id_grupo":1,
+                 "nombre_rubro":"Inversiones temporarias"
+              },
+              {
+                 "id_rubro":3,
+                 "id_bloque":1,
+                 "id_grupo":1,
+                 "nombre_rubro":"Creditos por ventas"
+              },
+              {
+                 "id_rubro":4,
+                 "id_bloque":1,
+                 "id_grupo":1,
+                 "nombre_rubro":"Otros creditos"
+              },
+              {
+                 "id_rubro":5,
+                 "id_bloque":1,
+                 "id_grupo":1,
+                 "nombre_rubro":"Bienes de cambio"
+              },
+              {
+                 "id_rubro":6,
+                 "id_bloque":1,
+                 "id_grupo":1,
+                 "nombre_rubro":"Otros bienes"
+              },
+              {
+                 "id_rubro":7,
+                 "id_bloque":2,
+                 "id_grupo":1,
+                 "nombre_rubro":"Creditos por ventas"
+              },
+              {
+                 "id_rubro":8,
+                 "id_bloque":2,
+                 "id_grupo":1,
+                 "nombre_rubro":"Bienes de cambio"
+              },
+              {
+                 "id_rubro":9,
+                 "id_bloque":2,
+                 "id_grupo":1,
+                 "nombre_rubro":"Participacion permanente en sociedades"
+              },
+              {
+                 "id_rubro":10,
+                 "id_bloque":2,
+                 "id_grupo":1,
+                 "nombre_rubro":"Otras inversiones"
+              },
+              {
+                 "id_rubro":11,
+                 "id_bloque":2,
+                 "id_grupo":1,
+                 "nombre_rubro":"Bienes de uso"
+              },
+              {
+                 "id_rubro":12,
+                 "id_bloque":2,
+                 "id_grupo":1,
+                 "nombre_rubro":"Activos intangibles"
+              },
+              {
+                 "id_rubro":13,
+                 "id_bloque":2,
+                 "id_grupo":1,
+                 "nombre_rubro":"Otros activos"
+              },
+              {
+                 "id_rubro":14,
+                 "id_bloque":2,
+                 "id_grupo":1,
+                 "nombre_rubro":"Llave de negocio"
+              },
+              {
+                 "id_rubro":15,
+                 "id_bloque":1,
+                 "id_grupo":2,
+                 "nombre_rubro":"Deudas comerciales"
+              },
+              {
+                 "id_rubro":16,
+                 "id_bloque":1,
+                 "id_grupo":2,
+                 "nombre_rubro":"Prestamos"
+              },
+              {
+                 "id_rubro":17,
+                 "id_bloque":1,
+                 "id_grupo":2,
+                 "nombre_rubro":"Remuneraciones y cargas sociales"
+              },
+              {
+                 "id_rubro":18,
+                 "id_bloque":1,
+                 "id_grupo":2,
+                 "nombre_rubro":"Cargas fiscales"
+              },
+              {
+                 "id_rubro":19,
+                 "id_bloque":1,
+                 "id_grupo":2,
+                 "nombre_rubro":"Anticipo de clientes"
+              },
+              {
+                 "id_rubro":20,
+                 "id_bloque":1,
+                 "id_grupo":2,
+                 "nombre_rubro":"Dividendos a pagar"
+              },
+              {
+                 "id_rubro":21,
+                 "id_bloque":1,
+                 "id_grupo":2,
+                 "nombre_rubro":"Otras deudas"
+              },
+              {
+                 "id_rubro":22,
+                 "id_bloque":1,
+                 "id_grupo":2,
+                 "nombre_rubro":"Previsiones"
+              },
+              {
+                 "id_rubro":23,
+                 "id_bloque":2,
+                 "id_grupo":2,
+                 "nombre_rubro":"Duedas"
+              },
+              {
+                 "id_rubro":25,
+                 "id_bloque":2,
+                 "id_grupo":2,
+                 "nombre_rubro":"Previsiones"
+              }
+           ]
+        }
+]
