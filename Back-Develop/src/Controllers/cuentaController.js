@@ -1,23 +1,19 @@
 // Importamos los controladores
+const inicio = require('./inicioAplicacion');
 const mostrarCuentas = require('./mostrarCuentasController');
-const rellenarOptions = require('./optionsGrupoBloqueController');
-const obtenerRubros = require('./optionRubrosController');
 const modificarCuenta = require('./modificarCuentaController');
 const agregarCuenta = require('./agregarCuentaController');
 const borrarCuenta = require('./borrarCuentaController');
 const generarPDF = require('./generarPdfController');
-const inicio = require('./inicioAplicacion');
 
 // Controlador general (orquestador)
 const cuentaController = {
+  inicio,
   mostrarCuentas,
-  rellenarOptions,
-  obtenerRubros,
   modificarCuenta,
   agregarCuenta,
   borrarCuenta,
-  generarPDF,
-  inicio
+  generarPDF
 };
 
 // El 'orquestador' es un mediador entre los controladores y nuestro 'app.js'.
