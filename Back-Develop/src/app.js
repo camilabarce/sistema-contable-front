@@ -6,7 +6,6 @@ const app = express();
 const path = require('path'); // Para concatenar ruta del index.html
 const cuentaController = require('./Controllers/cuentaController'); // Orquestador.
 
-
 // Configuraciones
 app.set('port', process.env.PORT || 3000); // Asignamos un puerto disponible por defecto o puerto 3000.
 const port = app.get('port');
@@ -18,12 +17,10 @@ app.use(express.json()); //Para interpretar el formato JSON automáticamente (Ev
 
 // Rutas (URL´s)
 app.get('/', cuentaController.inicio); // Carga de página principal (index.html)
-app.get('/optionsGrupoBloque', cuentaController.rellenarOptions); //Rellena nombres y values con uso de la base de datos.
-app.get('/optionRubros/:idGrupo/:idBloque', cuentaController.obtenerRubros); //Obtiene los rubros que resultan de la combinación de los values de grupo y bloque.
-app.post('/mostrarCuentas/:grupoOption/:bloqueOption/:rubroOption', cuentaController.mostrarCuentas); //Imprime la cuenta a través del botón.
-app.post('/modificarCuenta/:nuevoNombre/:codigoCuenta/:nombreActual', cuentaController.modificarCuenta); //Modifica el nombre de la cuenta
+app.post('/mostrarCuentas/:grupoOption/:bloqueOption/:rubroOption', cuentaController.mostrarCuentas); 
+app.post('/modificarCuenta/:nuevoNombre/:codigoCuenta/:nombreActual', cuentaController.modificarCuenta);
 app.post('/agregarCuenta/:nuevaCuenta/:grupoOption/:bloqueOption/:rubroOption', cuentaController.agregarCuenta);
-app.delete('/borrarCuenta/:codigoCuenta/:grupoOption/:bloqueOption/:rubroOption',cuentaController.borrarCuenta);
+app.delete('/borrarCuenta/:codigoCuenta',cuentaController.borrarCuenta);
 app.post('/generarPDF', cuentaController.generarPDF);
     
 // Establecemos la carpeta estática para servir el archivo 'index.html'
@@ -35,3 +32,4 @@ app.listen(port, ()=>{
 });
 
 module.exports = app;
+

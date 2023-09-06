@@ -1,5 +1,5 @@
 const conexion = require('../Database/conexion');
-const Cuenta = require('../Models/modeloImpreso');
+const Cuenta = require('../Models/modeloCuenta');
 
 //Controlador para mostrar las cuentas en la tabla HTML
 const mostrarCuentas = (req, res) => {
