@@ -28,3 +28,10 @@ Componente que consume el servicio
 Rutas a utilizar (Pueden corroborar si están correctas en 'Back-Develop/src/app.js')
   
 ![](https://github.com/camilabarce/sistema-contable/blob/develop/Back-Develop/Ignorar/3.png)
+
+<br>
+
+Ejemplo de la información que traerá ***/mostrarCuentas/ 1/ 1/ 1***
+
+![](https://github.com/camilabarce/sistema-contable/blob/develop/Back-Develop/Ignorar/4.png)
+
