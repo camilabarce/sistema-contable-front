@@ -17,7 +17,7 @@ app.use(express.json()); //Para interpretar el formato JSON automáticamente (Ev
 
 // Rutas (URL´s)
 app.get('/', cuentaController.inicio); // Carga de página principal (index.html)
-app.post('/mostrarCuentas/:grupoOption/:bloqueOption/:rubroOption', cuentaController.mostrarCuentas); 
+app.get('/mostrarCuentas/:grupoOption/:bloqueOption/:rubroOption', cuentaController.mostrarCuentas); 
 app.post('/modificarCuenta/:nuevoNombre/:codigoCuenta/:nombreActual', cuentaController.modificarCuenta);
 app.post('/agregarCuenta/:nuevaCuenta/:grupoOption/:bloqueOption/:rubroOption', cuentaController.agregarCuenta);
 app.delete('/borrarCuenta/:codigoCuenta',cuentaController.borrarCuenta);
