@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CuentasAdministrationModule } from './modules/cuentas-administration/cuentas-administration.module';
 import { LayoutModule } from './modules/layout/layout.module';
+import { HttpClientModule } from '@angular/common/http'; 
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { LayoutModule } from './modules/layout/layout.module';
     AppRoutingModule,
     BrowserAnimationsModule,
     CuentasAdministrationModule,
-    LayoutModule
+    LayoutModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

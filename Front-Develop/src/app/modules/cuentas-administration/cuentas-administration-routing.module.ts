@@ -6,7 +6,7 @@ import { CuentasDetailComponent } from './cuentas-detail/cuentas-detail.componen
 const routes: Routes = [
   {path: '', redirectTo: 'list', pathMatch: 'full'},
   {path: 'list', component: CuentasListComponent},
-  {path: 'detail', component: CuentasDetailComponent}
+  {path: 'detail/:codigo', component: CuentasDetailComponent}
 ];
 
 @NgModule({

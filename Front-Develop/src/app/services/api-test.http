@@ -1,0 +1,3 @@
+# GET https://localhost:3000/mostrarCuentas/1/1/1
+
+GET https://localhost:3000/mostrarCuentas/2/1/1
