@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { Cuenta } from 'src/app/models/cuenta';
-import { CuentaDataService } from 'src/app/services/cuenta-data.service';
-import { CuentasService } from 'src/app/services/cuentas.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ApiService } from 'src/app/services/api-service/api-service.service';
 
 @Component({
   selector: 'app-cuentas-detail',
@@ -11,56 +9,42 @@ import { CuentasService } from 'src/app/services/cuentas.service';
   styleUrls: ['./cuentas-detail.component.css']
 })
 export class CuentasDetailComponent implements OnInit {
+  nombreActual: string = '';
+  codigoCuenta: string = '';
+  nuevoNombre: string = '';
 
-  cuentasForm: FormGroup = this.fb.group({
-    newname: ['', Validators.required],
-    codigo: [''],
-    name: ['']
-  })
+  cuentasForm: FormGroup;
 
-  constructor (private fb: FormBuilder,
-    private cuentasService: CuentasService,
+  constructor(
+    private fb: FormBuilder,
     private route: ActivatedRoute,
-    private cuentaDataService: CuentaDataService) {  }
-
-  ngOnInit() {
-    this.route.params.subscribe(params => {
-      const codigoCuenta = +params['codigo'];
-      if (!isNaN(codigoCuenta)) {
-        this.cargarDetalleCuenta(codigoCuenta);
-      }
+    private apiService: ApiService,
+    private router: Router
+  ) {
+    this.cuentasForm = this.fb.group({
+      nuevoNombre: ['', Validators.required]
     });
   }
 
-  cargarDetalleCuenta(codigoCuenta: number) {
-    this.cuentaDataService.cuentasList$.subscribe(cuentas => {
-      const cuenta = cuentas.find(c => c.codigo === codigoCuenta.toString());
-      if (cuenta) {
-        this.cuentasForm.patchValue({
-          codigo: cuenta.codigo,
-          name: cuenta.nombre
-        });
-        this.cuentasForm.disable();
-      } else {
-        console.error('Cuenta no encontrada');
-      }
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      this.nombreActual = params['nombreActual'];
+      this.codigoCuenta = params['codigoCuenta'];
     });
   }
 
-  modificarCuenta(nuevoNombre: string, codigoCuenta: number, nombreActual: string) {
-    this.cuentasService.modificarCuenta(nuevoNombre, codigoCuenta, nombreActual).subscribe({
-      next: (response: any) => {
-        // Manejar la respuesta exitosa del servidor si es necesario
-        console.log('Cuenta modificada con éxito', response);
-      },
-      error: (error: any) => {
-        // Manejar el error si ocurre
-        console.error('Error al modificar la cuenta', error);
-      },
-    });
+  mostrarNombreActual() {
+    // this.cuentasForm.get('nuevoNombre')?.setValue(this.nombreActual);
+    return this.nombreActual;
   }
   
-  guardarCambios(){
-
+  cambiarNombre() {
+    if (this.cuentasForm.valid) {
+      const nuevoNombre = this.cuentasForm.get('nuevoNombre')?.value;
+      this.apiService.modificarCuenta(nuevoNombre, this.codigoCuenta, this.nombreActual).subscribe((resultado) => {
+        this.router.navigate(['/cuentas/list']);
+        console.log('Cambiar nombre', resultado);
+      });
+    }
   }
 }

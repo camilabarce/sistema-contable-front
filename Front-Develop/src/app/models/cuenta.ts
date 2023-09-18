@@ -1,13 +1,11 @@
 export class Cuenta {
-    codigo: string;
+    codigo: number;
     nombre: string;
     tipo: string;
-    saldo: number;
 
-    constructor(codigo: string, nombre: string, tipo: string, saldo: number) {
+    constructor(codigo: number, nombre: string, tipo: string) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.tipo = tipo;
-        this.saldo = saldo;
     }
 }

@@ -1,8 +1,6 @@
 .form {
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    align-items: center;
 }
 .campo {
     width: 50vw;
@@ -10,4 +8,9 @@
 .btn {
     height: 3.4rem;
     margin: .25rem .5rem;
+}
+
+.tituloEditar{
+    text-align: center;
+    padding-bottom: 3%;
 }

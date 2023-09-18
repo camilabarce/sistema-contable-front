@@ -1,31 +1,20 @@
 <mat-card>
     <mat-card-header>
-        <button type="button" mat-icon-button color="primary" routerLink="['/cuentas/detail', cuentas.codigo]">
+        <button type="button" mat-icon-button color="primary" routerLink="/cuentas/list">
             <mat-icon>arrow_back</mat-icon>
             <h4>Volver</h4>
         </button>
     </mat-card-header>
-    <form class="form" [formGroup]="cuentasForm" (ngSubmit)="guardarCambios()">
-        <!-- !Campo nuevo nombre -->
-        <mat-form-field class="campo" formControlName="newname">
-            <mat-label> Ingrese el nombre nuevo de la cuenta </mat-label>
-            <input matInput type="text">
-            <!-- <mat-hint *ngIf="cuentasForm.controls['name'].errors['required']">
-                no da error porque en ts.config.json -> stricted: false 
-                Por favor complete este campo.
-            </mat-hint> -->
+    
+    <mat-card-title class="tituloEditar"> Usted modificará la cuenta "{{mostrarNombreActual()}}"</mat-card-title>
+   
+    <form class="form" [formGroup]="cuentasForm" (ngSubmit)="cambiarNombre()">
+        <mat-form-field class="campo">
+            <mat-label>
+                Ingrese el nuevo nombre de la cuenta
+            </mat-label>
+            <input matInput type="text" formControlName="nuevoNombre">
         </mat-form-field>
-        <!-- !Campo código -->
-        <mat-form-field class="campo" formControlName="codigo">
-            <mat-label> Código de la cuenta </mat-label>
-            <input matInput type="text">
-        </mat-form-field>
-        <!-- !Campo nombre -->
-        <mat-form-field class="campo" formControlName="name">
-            <mat-label> Nombre de la cuenta </mat-label>
-            <input matInput type="text">
-        </mat-form-field>
-
-        <button type="submit" mat-raised-button class="btn" color="basic" [disabled]="cuentasForm.valid">Guardar</button>
+        <button type="submit" mat-raised-button class="btn" color="basic" [disabled]="!cuentasForm.valid">Guardar</button>    
     </form>
 </mat-card>
