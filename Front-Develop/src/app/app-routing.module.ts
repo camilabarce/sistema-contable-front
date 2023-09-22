@@ -12,6 +12,11 @@ const routes: Routes = [
         path: 'cuentas',
         loadChildren: () => 
         import('./modules/cuentas-administration/cuentas-administration.module').then(mod => mod.CuentasAdministrationModule)
+      },
+      {
+        path: 'asientos',
+        loadChildren: () =>
+        import('./modules/asientos/asientos.module').then(mod => mod.AsientosModule)
       }
     ]
   }

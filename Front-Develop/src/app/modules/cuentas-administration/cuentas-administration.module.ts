@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CuentasAdministrationRoutingModule } from './cuentas-administration-routing.module';
 import { CuentasListComponent } from './cuentas-list/cuentas-list.component';
+import { CuentasDetailComponent } from './cuentas-detail/cuentas-detail.component';
 import { MatCardModule } from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,13 +13,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
-import { FilterPipe } from './filter.pipe';
-import { CuentasDetailComponent } from './cuentas-detail/cuentas-detail.component';
 
 @NgModule({
   declarations: [
     CuentasListComponent,
-    FilterPipe,
     CuentasDetailComponent 
   ],
   imports: [

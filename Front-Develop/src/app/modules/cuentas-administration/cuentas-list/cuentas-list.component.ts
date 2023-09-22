@@ -16,12 +16,12 @@ export class CuentasListComponent implements OnInit {
    
    gruposBloquesRubros: any[] = [];
 
-   ngOnInit() {
+  ngOnInit() {
       this.http.get('assets/selectCuentas.json').subscribe((data: any) => {
-      this.gruposBloquesRubros = data;
-      console.log("Json estático", this.gruposBloquesRubros);
-  });
-}
+        this.gruposBloquesRubros = data;
+        console.log("Json estático", this.gruposBloquesRubros);
+      });
+  }
 
 grupoSeleccionado: number | null = null;
 bloqueSeleccionado: number | null = null;

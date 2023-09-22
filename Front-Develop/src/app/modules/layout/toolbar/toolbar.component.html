@@ -1,3 +1,32 @@
 <mat-toolbar color="primary">
-    <span>Plan de cuentas</span>
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <span>Sistema Contable</span>
+    <mat-menu #menu="matMenu">
+        <a [routerLink]="['/cuentas/list']">
+            <button mat-menu-item>
+                <mat-icon>library_books</mat-icon>
+                <span>Plan de Cuentas</span>
+            </button>
+        </a>
+        <a [routerLink]="['/asientos/list']">
+            <button mat-menu-item>
+                <mat-icon>auto_stories</mat-icon>
+                <span>Libro Diario</span>
+            </button>
+        </a>
+        <a href="">        
+            <button mat-menu-item disabled>
+                <mat-icon>book_5</mat-icon>
+                <span>Libro Mayor</span>
+            </button>
+        </a>
+        <a href="">
+            <button mat-menu-item disabled>
+                <mat-icon>account_balance</mat-icon>
+                <span>Balance</span>
+            </button>
+        </a>
+    </mat-menu>
 </mat-toolbar>

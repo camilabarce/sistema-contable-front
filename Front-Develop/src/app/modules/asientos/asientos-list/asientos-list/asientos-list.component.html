@@ -1,0 +1,31 @@
+<mat-card>
+    <h3>Lista de asientos</h3>
+    <table class="table" mat-table [dataSource]="asientosData">
+        <ng-container matColumnDef="nro_asiento">
+            <th class="th" mat-header-cell *matHeaderCellDef>No. Asiento</th>
+            <td mat-cell *matCellDef="let e">{{e.id_asiento}}</td>
+        </ng-container>
+        <ng-container matColumnDef="fecha">
+            <th class="th" mat-header-cell *matHeaderCellDef>Fecha</th>
+            <td mat-cell *matCellDef="let e">{{e.fecha_asiento}}</td>
+        </ng-container>
+        <ng-container matColumnDef="codigo">
+            <th class="th" mat-header-cell *matHeaderCellDef>Código</th>
+            <td mat-cell *matCellDef="let e">{{e.codigo}}</td>
+        </ng-container>
+        <ng-container matColumnDef="cuenta">
+            <th class="th" mat-header-cell *matHeaderCellDef>Cuenta</th>
+            <td mat-cell *matCellDef="let e">{{e.cuenta}}</td>
+        </ng-container>
+        <ng-container matColumnDef="debe">
+            <th class="th" mat-header-cell *matHeaderCellDef>Debe</th>
+            <td mat-cell *matCellDef="let e">{{e.importe}}</td>
+        </ng-container>
+        <ng-container matColumnDef="haber">
+            <th class="th" mat-header-cell *matHeaderCellDef>Haber</th>
+            <td mat-cell *matCellDef="let e">{{e.importe}}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</mat-card>

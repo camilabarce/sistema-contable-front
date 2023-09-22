@@ -30,4 +30,8 @@ export class ApiService {
     return this.http.delete(urlBorrar, {});
   }
 
+  mostrarAsientos(): Observable<any> {
+    const url = `${this.ApiUrl}/mostrarAsientos`;
+    return this.http.get(url);
+  }
 }

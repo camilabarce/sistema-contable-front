@@ -12,8 +12,7 @@
 }
 
 .table {
-    display: flex;
-    justify-content: center;
+    font-weight: 400;
 }
 .th {
     font-weight: bold;

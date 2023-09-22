@@ -1,7 +1,5 @@
-<!-- selección de grupo, bloque, rubro -->
 <mat-card>
-    <!-- encabezado -->
-    <!-- contenido -->
+    <!-- selección de grupo, bloque, rubro -->
     <mat-card-content class="content">
         <!-- grupo -->
         <mat-form-field class="campos">
@@ -11,14 +9,16 @@
             </mat-select>
         </mat-form-field>
         <!-- bloque -->
-        <mat-form-field class="campos" *ngIf="bloquesFiltrados.length > 0">
+        <mat-form-field class="campos">
+            <!-- *ngIf="bloquesFiltrados.length > 0" -->
             <mat-label>Selecciona un bloque</mat-label>
             <mat-select [(ngModel)]="bloqueSeleccionado" (ngModelChange)="actualizarRubrosFiltrados()">
                 <mat-option *ngFor="let bloque of bloquesFiltrados" [value]="bloque.id_bloque">{{ bloque.nombre_bloque }}</mat-option>
             </mat-select>
         </mat-form-field>
         <!-- rubro -->
-        <mat-form-field class="campos" *ngIf="rubrosFiltrados.length > 0">
+        <mat-form-field class="campos">
+            <!-- *ngIf="rubrosFiltrados.length > 0" -->
             <mat-label>Selecciona un rubro</mat-label>
             <mat-select [(ngModel)]="rubroSeleccionado">
                 <mat-option *ngFor="let rubro of rubrosFiltrados" [value]="rubro.id_rubro">{{ rubro.nombre_rubro }}</mat-option>
@@ -29,7 +29,7 @@
     </mat-card-content>
 </mat-card>
 <mat-card>
-    <table class="" mat-table [dataSource]="cuentasData">
+    <table class="table" mat-table [dataSource]="cuentasData">
         <!-- columna nombre -->
         <ng-container matColumnDef="nombre">
             <th class="th" mat-header-cell *matHeaderCellDef>Nombre</th>

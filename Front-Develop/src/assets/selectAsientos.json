@@ -1,0 +1,37 @@
+[
+    {
+        "id_asiento": 1,
+        "fecha_asiento": "2019-01-01",
+        "codigo": "1102001",
+        "cuenta": "Caja",
+        "importe": 1000
+    },
+    {
+        "id_asiento": 1,
+        "fecha_asiento": "2019-02-01",
+        "codigo": "1102002",
+        "cuenta": "Titulos publicos",
+        "importe": 1100
+    },
+    {
+        "id_asiento": 1,
+        "fecha_asiento": "2019-01-01",
+        "codigo": "1102003",
+        "cuenta": "Acciones con cotizacion",
+        "importe": -200
+    },
+    {
+        "id_asiento": 2,
+        "fecha_asiento": "2019-01-04",
+        "codigo": "1102004",
+        "cuenta": "Prestamos a cobrar a corto plazo",
+        "importe": -900
+    },
+    {
+        "id_asiento": 2,
+        "fecha_asiento": "2019-01-04",
+        "codigo": "1102005",
+        "cuenta": "Moneda extranjera",
+        "importe": 800
+    }
+]

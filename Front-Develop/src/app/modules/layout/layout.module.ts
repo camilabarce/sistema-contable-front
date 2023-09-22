@@ -4,6 +4,9 @@ import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from "@angular/router";
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -13,7 +16,10 @@ import { RouterModule } from "@angular/router";
   imports: [
     CommonModule,
     RouterModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatButtonModule,
+    MatMenuModule, 
+    MatIconModule
   ],
   exports: [
     AdminLayoutComponent

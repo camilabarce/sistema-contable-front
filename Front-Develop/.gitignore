@@ -1,0 +1,29 @@
+# Carpetas
+temp/
+tmp/
+
+logs/
+docs/
+
+bundle/
+build/
+dist/
+
+.angular/
+node_modules/
+.vscode/
+
+# Archivos
+*.swp
+*.temp
+*.tmp
+
+*.log*
+*.txt
+*.inf
+
+*.exe
+*.bat
+*.sh
+
+*.env
