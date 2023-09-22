@@ -5,6 +5,8 @@ import { AsientosListComponent } from './asientos-list/asientos-list/asientos-li
 import { AsientosDetailComponent } from './asientos-detail/asientos-detail/asientos-detail.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -15,7 +17,9 @@ import { MatTableModule } from '@angular/material/table';
     CommonModule,
     AsientosRoutingModule,
     MatCardModule,
-    MatTableModule
+    MatTableModule,
+    MatButtonModule,
+    MatExpansionModule
   ]
 })
 export class AsientosModule { }

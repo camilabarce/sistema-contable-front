@@ -1,3 +1,6 @@
+.btn-agregar{
+    margin: 1rem 2rem;
+}
 .table {
     width: 100%;
 }
@@ -9,4 +12,7 @@
 }
 .th {
     font-weight: bold;
+}
+.panel-tittle{
+    margin: auto;
 }
