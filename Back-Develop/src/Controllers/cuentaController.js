@@ -5,6 +5,7 @@ const modificarCuenta = require('./modificarCuentaController');
 const agregarCuenta = require('./agregarCuentaController');
 const borrarCuenta = require('./borrarCuentaController');
 const generarPDF = require('./generarPdfController');
+const mostrarAsientos = require('./mostrarAsientosController');
 
 // Controlador general (orquestador)
 const cuentaController = {
@@ -13,7 +14,8 @@ const cuentaController = {
   modificarCuenta,
   agregarCuenta,
   borrarCuenta,
-  generarPDF
+  generarPDF,
+  mostrarAsientos
 };
 
 // El 'orquestador' es un mediador entre los controladores y nuestro 'app.js'.

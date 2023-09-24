@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-09-2023 a las 21:21:30
+-- Tiempo de generación: 24-09-2023 a las 22:48:46
 -- Versión del servidor: 8.0.31
 -- Versión de PHP: 8.1.6
 
@@ -43,6 +43,12 @@ WHERE CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta) = codigoCuent
 AND C.nombre_cuenta = nombreActual
 AND (TC.id_grupo = G.id_grupo AND TC.id_bloque = B.id_bloque AND TC.id_rubro = R.id_rubro AND TC.id_cuenta = C.id_cuenta)$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarAsiento` ()   SELECT A.id_asiento,  DATE_FORMAT(A.fecha, '%Y-%m-%d') as 'fecha_asiento', C.cod_cuenta AS 'codigo', C.nombre_cuenta as 'cuenta', AC.importe 
+FROM cuentas C, asiento A, asiento_cuenta AC
+WHERE A.id_asiento = AC.id_asiento 
+AND C.id_cuenta = AC.id_cuenta
+ORDER BY A.id_asiento$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarCuentas` (IN `grupoOption` INT(11), IN `bloqueOption` INT(11), IN `rubroOption` INT(11))   select CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta) AS 'codigo',
        CONCAT(UPPER(SUBSTRING(C.nombre_cuenta, 1, 1)), LOWER(SUBSTRING(C.nombre_cuenta, 2))) AS 'nombre',
        CONCAT(UPPER(SUBSTRING(CONCAT(G.nombre_grupo, ' ', B.nombre_bloque), 1, 1)), LOWER(SUBSTRING(CONCAT(G.nombre_grupo, ' ', B.nombre_bloque), 2))) AS 'tipo', C.saldo_cuenta AS 'saldo'
@@ -61,10 +67,39 @@ DELIMITER ;
 
 CREATE TABLE `asiento` (
   `id_asiento` int NOT NULL,
-  `fecha` date NOT NULL,
-  `importe` decimal(10,2) NOT NULL,
-  `id_cuenta` int DEFAULT NULL
+  `fecha` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `asiento`
+--
+
+INSERT INTO `asiento` (`id_asiento`, `fecha`) VALUES
+(1, '2019-01-01'),
+(2, '2019-01-04');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `asiento_cuenta`
+--
+
+CREATE TABLE `asiento_cuenta` (
+  `id_asiento` int NOT NULL,
+  `id_cuenta` int NOT NULL,
+  `importe` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `asiento_cuenta`
+--
+
+INSERT INTO `asiento_cuenta` (`id_asiento`, `id_cuenta`, `importe`) VALUES
+(1, 1, '1000.00'),
+(1, 8, '1100.00'),
+(1, 9, '-200.00'),
+(2, 10, '-900.00'),
+(2, 11, '800.00');
 
 -- --------------------------------------------------------
 
@@ -349,7 +384,6 @@ INSERT INTO `rubro` (`id_rubro`, `nombre_rubro`, `cod_rubro`) VALUES
 --
 
 CREATE TABLE `tipo_cuentas` (
-  `id_tipo_cuentas` int NOT NULL,
   `id_grupo` int NOT NULL,
   `id_bloque` int NOT NULL,
   `id_rubro` int NOT NULL,
@@ -360,163 +394,163 @@ CREATE TABLE `tipo_cuentas` (
 -- Volcado de datos para la tabla `tipo_cuentas`
 --
 
-INSERT INTO `tipo_cuentas` (`id_tipo_cuentas`, `id_grupo`, `id_bloque`, `id_rubro`, `id_cuenta`) VALUES
-(1, 1, 1, 1, 1),
-(2, 1, 1, 1, 2),
-(3, 1, 1, 1, 3),
-(4, 1, 1, 1, 4),
-(5, 1, 1, 1, 5),
-(6, 1, 1, 1, 6),
-(7, 1, 1, 2, 7),
-(8, 1, 1, 2, 8),
-(9, 1, 1, 2, 9),
-(10, 1, 1, 2, 10),
-(11, 1, 1, 2, 11),
-(12, 1, 1, 2, 12),
-(13, 1, 1, 2, 13),
-(14, 1, 1, 3, 14),
-(15, 1, 1, 3, 15),
-(16, 1, 1, 3, 16),
-(17, 1, 1, 3, 17),
-(18, 1, 1, 3, 18),
-(19, 1, 1, 3, 19),
-(20, 1, 1, 3, 20),
-(21, 1, 1, 3, 21),
-(22, 1, 1, 3, 22),
-(23, 1, 1, 4, 23),
-(24, 1, 1, 4, 24),
-(25, 1, 1, 4, 25),
-(26, 1, 1, 4, 26),
-(27, 1, 1, 4, 27),
-(28, 1, 1, 4, 28),
-(29, 1, 1, 4, 29),
-(30, 1, 1, 4, 30),
-(31, 1, 1, 4, 31),
-(32, 1, 1, 4, 32),
-(33, 1, 1, 4, 33),
-(34, 1, 1, 5, 34),
-(35, 1, 1, 5, 35),
-(36, 1, 1, 5, 36),
-(37, 1, 1, 5, 37),
-(38, 1, 1, 5, 38),
-(39, 1, 1, 5, 39),
-(40, 1, 1, 5, 40),
-(41, 1, 1, 5, 41),
-(42, 1, 1, 6, 42),
-(43, 1, 2, 7, 43),
-(44, 1, 2, 8, 44),
-(45, 1, 2, 9, 45),
-(46, 1, 2, 10, 46),
-(47, 1, 2, 11, 47),
-(48, 1, 2, 11, 48),
-(49, 1, 2, 11, 49),
-(50, 1, 2, 11, 50),
-(51, 1, 2, 11, 51),
-(52, 1, 2, 12, 52),
-(53, 1, 2, 12, 53),
-(54, 1, 2, 12, 54),
-(55, 1, 2, 12, 55),
-(56, 1, 2, 12, 56),
-(57, 1, 2, 12, 57),
-(58, 1, 2, 12, 58),
-(59, 1, 2, 12, 59),
-(60, 1, 2, 12, 60),
-(61, 1, 2, 12, 61),
-(62, 1, 2, 13, 62),
-(63, 1, 2, 13, 63),
-(64, 1, 2, 13, 64),
-(65, 1, 2, 13, 65),
-(66, 1, 2, 13, 66),
-(67, 1, 2, 13, 67),
-(68, 1, 2, 13, 68),
-(69, 1, 2, 13, 69),
-(70, 1, 2, 13, 70),
-(71, 1, 2, 13, 71),
-(72, 1, 2, 13, 72),
-(73, 1, 2, 14, 73),
-(74, 1, 2, 15, 74),
-(75, 2, 1, 16, 75),
-(76, 2, 1, 16, 76),
-(77, 2, 1, 16, 77),
-(78, 2, 1, 16, 78),
-(79, 2, 1, 16, 79),
-(80, 2, 1, 16, 80),
-(81, 2, 1, 17, 81),
-(82, 2, 1, 17, 82),
-(83, 2, 1, 17, 83),
-(84, 2, 1, 17, 84),
-(85, 2, 1, 17, 85),
-(86, 2, 1, 17, 86),
-(87, 2, 1, 18, 87),
-(88, 2, 1, 18, 88),
-(89, 2, 1, 18, 89),
-(90, 2, 1, 18, 90),
-(91, 2, 1, 18, 91),
-(92, 2, 1, 19, 92),
-(93, 2, 1, 19, 93),
-(94, 2, 1, 19, 94),
-(95, 2, 1, 19, 95),
-(96, 2, 1, 19, 96),
-(97, 2, 1, 20, 97),
-(98, 2, 1, 21, 98),
-(99, 2, 1, 22, 99),
-(100, 2, 1, 22, 100),
-(101, 2, 1, 23, 101),
-(102, 2, 1, 23, 102),
-(103, 2, 1, 23, 103),
-(104, 2, 2, 24, 104),
-(105, 2, 2, 25, 105),
-(106, 3, 5, 26, 106),
-(107, 3, 5, 26, 107),
-(108, 3, 5, 26, 108),
-(109, 3, 5, 26, 109),
-(110, 3, 5, 26, 110),
-(111, 3, 5, 26, 111),
-(112, 3, 5, 27, 112),
-(113, 3, 5, 27, 113),
-(114, 3, 5, 27, 114),
-(115, 3, 5, 27, 115),
-(116, 3, 5, 27, 116),
-(117, 3, 5, 27, 117),
-(118, 4, 3, 28, 118),
-(119, 4, 3, 29, 119),
-(120, 4, 3, 29, 120),
-(121, 4, 3, 30, 121),
-(122, 4, 3, 30, 122),
-(123, 4, 3, 30, 123),
-(124, 4, 3, 30, 124),
-(125, 4, 3, 30, 125),
-(126, 4, 3, 30, 126),
-(127, 4, 3, 30, 127),
-(128, 4, 3, 30, 128),
-(129, 4, 3, 30, 129),
-(130, 4, 3, 31, 130),
-(131, 4, 3, 31, 131),
-(132, 4, 3, 31, 132),
-(133, 4, 3, 31, 133),
-(134, 4, 3, 31, 134),
-(135, 4, 3, 31, 135),
-(136, 4, 3, 31, 136),
-(137, 4, 3, 31, 137),
-(138, 4, 3, 32, 138),
-(139, 4, 3, 32, 139),
-(140, 4, 3, 33, 140),
-(141, 4, 3, 34, 141),
-(142, 4, 3, 34, 142),
-(143, 4, 3, 34, 143),
-(144, 4, 3, 34, 144),
-(145, 4, 3, 35, 145),
-(146, 4, 3, 35, 146),
-(147, 4, 3, 35, 147),
-(148, 4, 3, 35, 148),
-(149, 4, 3, 35, 149),
-(150, 4, 3, 35, 150),
-(151, 4, 3, 35, 151),
-(152, 4, 3, 35, 152),
-(153, 4, 3, 35, 153),
-(154, 4, 3, 35, 154),
-(155, 4, 3, 36, 155),
-(156, 4, 3, 37, 156);
+INSERT INTO `tipo_cuentas` (`id_grupo`, `id_bloque`, `id_rubro`, `id_cuenta`) VALUES
+(1, 1, 1, 1),
+(1, 1, 1, 2),
+(1, 1, 1, 3),
+(1, 1, 1, 4),
+(1, 1, 1, 5),
+(1, 1, 1, 6),
+(1, 1, 2, 7),
+(1, 1, 2, 8),
+(1, 1, 2, 9),
+(1, 1, 2, 10),
+(1, 1, 2, 11),
+(1, 1, 2, 12),
+(1, 1, 2, 13),
+(1, 1, 3, 14),
+(1, 1, 3, 15),
+(1, 1, 3, 16),
+(1, 1, 3, 17),
+(1, 1, 3, 18),
+(1, 1, 3, 19),
+(1, 1, 3, 20),
+(1, 1, 3, 21),
+(1, 1, 3, 22),
+(1, 1, 4, 23),
+(1, 1, 4, 24),
+(1, 1, 4, 25),
+(1, 1, 4, 26),
+(1, 1, 4, 27),
+(1, 1, 4, 28),
+(1, 1, 4, 29),
+(1, 1, 4, 30),
+(1, 1, 4, 31),
+(1, 1, 4, 32),
+(1, 1, 4, 33),
+(1, 1, 5, 34),
+(1, 1, 5, 35),
+(1, 1, 5, 36),
+(1, 1, 5, 37),
+(1, 1, 5, 38),
+(1, 1, 5, 39),
+(1, 1, 5, 40),
+(1, 1, 5, 41),
+(1, 1, 6, 42),
+(1, 2, 7, 43),
+(1, 2, 8, 44),
+(1, 2, 9, 45),
+(1, 2, 10, 46),
+(1, 2, 11, 47),
+(1, 2, 11, 48),
+(1, 2, 11, 49),
+(1, 2, 11, 50),
+(1, 2, 11, 51),
+(1, 2, 12, 52),
+(1, 2, 12, 53),
+(1, 2, 12, 54),
+(1, 2, 12, 55),
+(1, 2, 12, 56),
+(1, 2, 12, 57),
+(1, 2, 12, 58),
+(1, 2, 12, 59),
+(1, 2, 12, 60),
+(1, 2, 12, 61),
+(1, 2, 13, 62),
+(1, 2, 13, 63),
+(1, 2, 13, 64),
+(1, 2, 13, 65),
+(1, 2, 13, 66),
+(1, 2, 13, 67),
+(1, 2, 13, 68),
+(1, 2, 13, 69),
+(1, 2, 13, 70),
+(1, 2, 13, 71),
+(1, 2, 13, 72),
+(1, 2, 14, 73),
+(1, 2, 15, 74),
+(2, 1, 16, 75),
+(2, 1, 16, 76),
+(2, 1, 16, 77),
+(2, 1, 16, 78),
+(2, 1, 16, 79),
+(2, 1, 16, 80),
+(2, 1, 17, 81),
+(2, 1, 17, 82),
+(2, 1, 17, 83),
+(2, 1, 17, 84),
+(2, 1, 17, 85),
+(2, 1, 17, 86),
+(2, 1, 18, 87),
+(2, 1, 18, 88),
+(2, 1, 18, 89),
+(2, 1, 18, 90),
+(2, 1, 18, 91),
+(2, 1, 19, 92),
+(2, 1, 19, 93),
+(2, 1, 19, 94),
+(2, 1, 19, 95),
+(2, 1, 19, 96),
+(2, 1, 20, 97),
+(2, 1, 21, 98),
+(2, 1, 22, 99),
+(2, 1, 22, 100),
+(2, 1, 23, 101),
+(2, 1, 23, 102),
+(2, 1, 23, 103),
+(2, 2, 24, 104),
+(2, 2, 25, 105),
+(3, 5, 26, 106),
+(3, 5, 26, 107),
+(3, 5, 26, 108),
+(3, 5, 26, 109),
+(3, 5, 26, 110),
+(3, 5, 26, 111),
+(3, 5, 27, 112),
+(3, 5, 27, 113),
+(3, 5, 27, 114),
+(3, 5, 27, 115),
+(3, 5, 27, 116),
+(3, 5, 27, 117),
+(4, 3, 28, 118),
+(4, 3, 29, 119),
+(4, 3, 29, 120),
+(4, 3, 30, 121),
+(4, 3, 30, 122),
+(4, 3, 30, 123),
+(4, 3, 30, 124),
+(4, 3, 30, 125),
+(4, 3, 30, 126),
+(4, 3, 30, 127),
+(4, 3, 30, 128),
+(4, 3, 30, 129),
+(4, 3, 31, 130),
+(4, 3, 31, 131),
+(4, 3, 31, 132),
+(4, 3, 31, 133),
+(4, 3, 31, 134),
+(4, 3, 31, 135),
+(4, 3, 31, 136),
+(4, 3, 31, 137),
+(4, 3, 32, 138),
+(4, 3, 32, 139),
+(4, 3, 33, 140),
+(4, 3, 34, 141),
+(4, 3, 34, 142),
+(4, 3, 34, 143),
+(4, 3, 34, 144),
+(4, 3, 35, 145),
+(4, 3, 35, 146),
+(4, 3, 35, 147),
+(4, 3, 35, 148),
+(4, 3, 35, 149),
+(4, 3, 35, 150),
+(4, 3, 35, 151),
+(4, 3, 35, 152),
+(4, 3, 35, 153),
+(4, 3, 35, 154),
+(4, 3, 36, 155),
+(4, 3, 37, 156);
 
 --
 -- Índices para tablas volcadas
@@ -526,7 +560,13 @@ INSERT INTO `tipo_cuentas` (`id_tipo_cuentas`, `id_grupo`, `id_bloque`, `id_rubr
 -- Indices de la tabla `asiento`
 --
 ALTER TABLE `asiento`
-  ADD PRIMARY KEY (`id_asiento`),
+  ADD PRIMARY KEY (`id_asiento`);
+
+--
+-- Indices de la tabla `asiento_cuenta`
+--
+ALTER TABLE `asiento_cuenta`
+  ADD KEY `id_asiento` (`id_asiento`,`id_cuenta`),
   ADD KEY `id_cuenta` (`id_cuenta`);
 
 --
@@ -557,7 +597,6 @@ ALTER TABLE `rubro`
 -- Indices de la tabla `tipo_cuentas`
 --
 ALTER TABLE `tipo_cuentas`
-  ADD PRIMARY KEY (`id_tipo_cuentas`),
   ADD KEY `id_grupo` (`id_grupo`),
   ADD KEY `id_bloque` (`id_bloque`),
   ADD KEY `id_rubro` (`id_rubro`),
@@ -571,17 +610,18 @@ ALTER TABLE `tipo_cuentas`
 -- AUTO_INCREMENT de la tabla `asiento`
 --
 ALTER TABLE `asiento`
-  MODIFY `id_asiento` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_asiento` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Restricciones para tablas volcadas
 --
 
 --
--- Filtros para la tabla `asiento`
+-- Filtros para la tabla `asiento_cuenta`
 --
-ALTER TABLE `asiento`
-  ADD CONSTRAINT `asiento_ibfk_1` FOREIGN KEY (`id_cuenta`) REFERENCES `cuentas` (`id_cuenta`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `asiento_cuenta`
+  ADD CONSTRAINT `asiento_cuenta_ibfk_1` FOREIGN KEY (`id_asiento`) REFERENCES `asiento` (`id_asiento`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `asiento_cuenta_ibfk_2` FOREIGN KEY (`id_cuenta`) REFERENCES `cuentas` (`id_cuenta`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Filtros para la tabla `tipo_cuentas`
