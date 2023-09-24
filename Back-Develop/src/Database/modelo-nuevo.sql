@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-09-2023 a las 14:32:53
+-- Tiempo de generación: 24-09-2023 a las 21:21:30
 -- Versión del servidor: 8.0.31
 -- Versión de PHP: 8.1.6
 
@@ -18,17 +18,38 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `sistema_contable`
+-- Base de datos: `sistcontable`
 --
 
 DELIMITER $$
 --
 -- Procedimientos
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `rubro` (IN `grupoOption` INT(30), IN `bloqueOption` INT(30))   SELECT B.id_bloque, G.id_grupo, B.nombre_bloque
-FROM grupo G, bloque B
-WHERE B.id_bloque = bloqueOption
-AND G.id_grupo = grupoOption$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `borrarCuenta` (IN `codigoCuenta` VARCHAR(9))   BEGIN
+	
+	UPDATE grupo g, bloque b, rubro r, cuentas c, tipo_cuentas tc
+	SET c.mostrarCuenta = 0
+	WHERE CONCAT(g.cod_grupo, b.cod_bloque, r.cod_rubro, c.cod_cuenta) = codigoCuenta AND
+	tc.id_grupo = g.id_grupo AND
+	tc.id_bloque = b.id_bloque AND
+	tc.id_rubro = r.id_rubro AND
+	tc.id_cuenta = c.id_cuenta;
+	
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `modificarCuenta` (IN `nuevoNombre` VARCHAR(50), IN `codigoCuenta` VARCHAR(50), IN `nombreActual` VARCHAR(50))   UPDATE grupo G, bloque B, rubro R, cuentas C, tipo_cuentas TC
+SET C.nombre_cuenta = nuevoNombre
+WHERE CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta) = codigoCuenta
+AND C.nombre_cuenta = nombreActual
+AND (TC.id_grupo = G.id_grupo AND TC.id_bloque = B.id_bloque AND TC.id_rubro = R.id_rubro AND TC.id_cuenta = C.id_cuenta)$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarCuentas` (IN `grupoOption` INT(11), IN `bloqueOption` INT(11), IN `rubroOption` INT(11))   select CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta) AS 'codigo',
+       CONCAT(UPPER(SUBSTRING(C.nombre_cuenta, 1, 1)), LOWER(SUBSTRING(C.nombre_cuenta, 2))) AS 'nombre',
+       CONCAT(UPPER(SUBSTRING(CONCAT(G.nombre_grupo, ' ', B.nombre_bloque), 1, 1)), LOWER(SUBSTRING(CONCAT(G.nombre_grupo, ' ', B.nombre_bloque), 2))) AS 'tipo', C.saldo_cuenta AS 'saldo'
+FROM grupo G, bloque B, rubro R, cuentas C, tipo_cuentas TC
+where (G.id_grupo = TC.id_grupo and B.id_bloque = TC.id_bloque and R.id_rubro = TC.id_rubro and C.id_cuenta = TC.id_cuenta)
+AND (TC.id_grupo = grupoOption and TC.id_bloque = bloqueOption and TC.id_rubro = rubroOption)
+AND C.mostrarCuenta = 1$$
 
 DELIMITER ;
 
