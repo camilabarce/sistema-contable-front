@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-09-2023 a las 22:48:46
+-- Tiempo de generación: 26-09-2023 a las 00:17:04
 -- Versión del servidor: 8.0.31
 -- Versión de PHP: 8.1.6
 
@@ -43,10 +43,12 @@ WHERE CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta) = codigoCuent
 AND C.nombre_cuenta = nombreActual
 AND (TC.id_grupo = G.id_grupo AND TC.id_bloque = B.id_bloque AND TC.id_rubro = R.id_rubro AND TC.id_cuenta = C.id_cuenta)$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarAsiento` ()   SELECT A.id_asiento,  DATE_FORMAT(A.fecha, '%Y-%m-%d') as 'fecha_asiento', C.cod_cuenta AS 'codigo', C.nombre_cuenta as 'cuenta', AC.importe 
-FROM cuentas C, asiento A, asiento_cuenta AC
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarAsiento` (IN `grupoOption` INT, IN `bloqueOption` INT, IN `rubroOption` INT)   SELECT A.id_asiento,  DATE_FORMAT(A.fecha, '%Y-%m-%d') as 'fecha_asiento', CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta)  AS 'codigo', C.nombre_cuenta as 'cuenta', AC.importe 
+FROM grupo G, bloque B, rubro R, cuentas C, tipo_cuentas TC, asiento A, asiento_cuenta AC
 WHERE A.id_asiento = AC.id_asiento 
 AND C.id_cuenta = AC.id_cuenta
+AND G.id_grupo = TC.id_grupo AND B.id_bloque = TC.id_bloque AND R.id_rubro = TC.id_rubro AND C.id_cuenta = TC.id_cuenta
+AND G.id_grupo = grupoOption AND B.id_bloque = bloqueOption AND R.id_rubro = rubroOption
 ORDER BY A.id_asiento$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarCuentas` (IN `grupoOption` INT(11), IN `bloqueOption` INT(11), IN `rubroOption` INT(11))   select CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta) AS 'codigo',

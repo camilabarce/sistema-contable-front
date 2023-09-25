@@ -2,7 +2,8 @@ const conexion = require('../Database/conexion');
 const Asiento = require('../Models/modeloAsiento');
 
 const mostrarAsientos = (req, res) => {
-    conexion.query('CALL mostrarAsiento()',(error, results) => {
+  const {grupo, bloque, rubro} = req.params;
+    conexion.query('CALL mostrarAsiento(?, ?, ?)', [grupo, bloque, rubro], (error, results) => {
         if (error) throw error;
       
         const asientos = results[0].map((data) => {
