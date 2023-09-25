@@ -2,10 +2,10 @@ const conexion = require('../Database/conexion');
 const Asiento = require('../Models/modeloAsiento');
 
 const mostrarAsientos = (req, res) => {
-  const {grupo, bloque, rubro} = req.params;
-    conexion.query('CALL mostrarAsiento(?, ?, ?)', [grupo, bloque, rubro], (error, results) => {
+  const {grupoOption, bloqueOption, rubroOption} = req.params;
+    conexion.query('CALL mostrarAsiento(?, ?, ?)', [grupoOption, bloqueOption, rubroOption], (error, results) => {
         if (error) throw error;
-      
+        
         const asientos = results[0].map((data) => {
           return new Asiento(data.id_asiento, data.fecha_asiento, data.codigo, data.cuenta, data.importe); //Instanciamos el objeto ubicado en 'src/Models/modeloAsiento.js'
         });
