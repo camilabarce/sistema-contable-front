@@ -7,7 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
-
+import { MatIconModule } from '@angular/material/icon';
 @NgModule({
   declarations: [
     AsientosListComponent,
@@ -19,7 +19,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatCardModule,
     MatTableModule,
     MatButtonModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatIconModule
   ]
 })
 export class AsientosModule { }

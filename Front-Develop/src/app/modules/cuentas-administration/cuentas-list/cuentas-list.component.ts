@@ -11,7 +11,7 @@ import { ApiService } from 'src/app/services/api-service/api-service.service';
 
 export class CuentasListComponent implements OnInit {
 
-   constructor(private router: Router, private http: HttpClient, private apiService: ApiService){
+   constructor(private http: HttpClient, private apiService: ApiService){
    }
    
    gruposBloquesRubros: any[] = [];

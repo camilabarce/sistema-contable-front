@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ApiService } from 'src/app/services/api-service/api-service.service';
 
 @Component({
   selector: 'app-asientos-list',
@@ -8,21 +9,25 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AsientosListComponent implements OnInit {
   
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private apiService: ApiService) { }
 
   asientosData: any[] = [];
   asientosAgrupados: AsientoGroup[] = [];
   
   ngOnInit() {
-    this.http.get('assets/selectAsientos.json').subscribe((data: any) => {
-      this.asientosData = data;
-      this.asientosAgrupados = this.agruparAsientos(this.asientosData);
-      console.log("Json estático asientos: ", this.asientosData);
-    });
+    this.mostrarAsientos();
   }
   // dataSource = this.asientosData;
   displayedColumns = ['nro_asiento', 'fecha', 'codigo', 'cuenta', 'debe', 'haber'];
 
+  mostrarAsientos() {
+    this.apiService.mostrarAsientos().subscribe((data: any) => {
+      this.asientosData = data;
+      this.asientosAgrupados = this.agruparAsientos(this.asientosData);
+      console.log("Asientos: ", this.asientosData);
+    });
+  }
+  
   // Función para agrupar los asientos por id_asiento
   agruparAsientos(asientos: any[]): any[] {
     const asientosAgrupados: AsientoGroup[] = [];
@@ -42,5 +47,6 @@ export class AsientosListComponent implements OnInit {
 }
 interface AsientoGroup {
     id_asiento: number;
-    asientos: any[]; // Aquí, any[] representa los detalles de los asientos en el grupo
+    asientos: any[]; // any[] representa los detalles de los asientos en el grupo
   }
+  

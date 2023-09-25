@@ -1,13 +1,17 @@
 <mat-card>
-    <div>
-        <button mat-raised-button class="btn-agregar">
+    <div class="title">
+        <h2>Lista de asientos</h2>
+        <button mat-raised-button class="btn-agregar" [routerLink]="['/asientos/detail']">
+            <mat-icon>add</mat-icon>
             Agregar asiento
         </button>
     </div>
     <mat-accordion>
         <mat-expansion-panel *ngFor="let asientoGroup of asientosAgrupados">
             <mat-expansion-panel-header>
-                <mat-panel-title class="th panel-tittle"> Nro. Asiento: {{ asientoGroup.id_asiento }}</mat-panel-title>
+                <mat-panel-title class="th panel-title"> 
+                    <div class="th">Nro. Asiento: {{ asientoGroup.id_asiento }}</div>
+                </mat-panel-title>
                 <mat-panel-description>
                     Descripción del asiento
                 </mat-panel-description>
