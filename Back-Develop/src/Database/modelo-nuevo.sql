@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-09-2023 a las 00:17:04
+-- Tiempo de generación: 04-10-2023 a las 17:30:22
 -- Versión del servidor: 8.0.31
 -- Versión de PHP: 8.1.6
 
@@ -25,6 +25,31 @@ DELIMITER $$
 --
 -- Procedimientos
 --
+CREATE DEFINER=`root`@`localhost` PROCEDURE `agregarCuenta` (IN `grupoOption` INT(30), IN `bloqueOption` INT(30), IN `rubroOption` INT(30), IN `nuevaCuenta` VARCHAR(50))   BEGIN
+
+DECLARE ultimoIdCuenta INT;
+       
+SELECT MAX(C.id_cuenta) + 1 INTO ultimoIdCuenta FROM cuentas C;
+
+INSERT INTO cuentas (id_cuenta, nombre_cuenta, cod_cuenta, saldo_cuenta, mostrarCuenta)
+VALUES (ultimoIdCuenta,
+    nuevaCuenta,
+    LPAD((SUBSTRING((SELECT MAX(C.cod_cuenta) FROM cuentas C, tipo_cuentas TC WHERE (C.id_cuenta = TC.id_cuenta AND TC.id_grupo = grupoOption AND TC.id_bloque = bloqueOption AND TC.id_rubro = rubroOption) AND C.mostrarCuenta = 1), -3) + 1), 3, '0'),
+    0.00,
+    1
+);
+
+INSERT INTO tipo_cuentas (id_grupo, id_bloque, id_rubro, id_cuenta)
+VALUES (
+    grupoOption,
+    bloqueOption,
+    rubroOption,
+    ultimoIdCuenta
+);
+
+
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `borrarCuenta` (IN `codigoCuenta` VARCHAR(9))   BEGIN
 	
 	UPDATE grupo g, bloque b, rubro r, cuentas c, tipo_cuentas tc
@@ -124,7 +149,7 @@ INSERT INTO `bloque` (`id_bloque`, `nombre_bloque`, `cod_bloque`) VALUES
 (2, 'no corriente', '2'),
 (3, 'ordinario ', '3'),
 (4, 'extraordinario', '4'),
-(5, '', '5');
+(5, 'capital', '5');
 
 -- --------------------------------------------------------
 
@@ -300,7 +325,9 @@ INSERT INTO `cuentas` (`id_cuenta`, `nombre_cuenta`, `cod_cuenta`, `saldo_cuenta
 (153, 'comisiones cobradas', '009', '0.00', 1),
 (154, 'comisiones pagadas', '010', '0.00', 1),
 (155, 'impuesto a operaciones ordinarias', '001', '0.00', 1),
-(156, 'impuesto neto a las ganancias', '001', '0.00', 1);
+(156, 'impuesto neto a las ganancias', '001', '0.00', 1),
+(157, 'robo', '001', '0.00', 1),
+(158, 'incendio', '002', '0.00', 1);
 
 -- --------------------------------------------------------
 
@@ -377,7 +404,8 @@ INSERT INTO `rubro` (`id_rubro`, `nombre_rubro`, `cod_rubro`) VALUES
 (34, 'resultados financieros y por tenencia', '07'),
 (35, 'otros ingresos y egresos', '08'),
 (36, 'impuesto a las ganancias', '09'),
-(37, 'participacion minoritaria sobre los resultados', '10');
+(37, 'participacion minoritaria sobre los resultados', '10'),
+(38, 'resultados extraordinarios', '01');
 
 -- --------------------------------------------------------
 
@@ -552,7 +580,9 @@ INSERT INTO `tipo_cuentas` (`id_grupo`, `id_bloque`, `id_rubro`, `id_cuenta`) VA
 (4, 3, 35, 153),
 (4, 3, 35, 154),
 (4, 3, 36, 155),
-(4, 3, 37, 156);
+(4, 3, 37, 156),
+(4, 4, 38, 157),
+(4, 4, 38, 158);
 
 --
 -- Índices para tablas volcadas
