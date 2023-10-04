@@ -15,6 +15,13 @@ export class AsientosListComponent implements OnInit {
   asientosAgrupados: AsientoGroup[] = [];
   
   ngOnInit() {
+//Esto es para visualizar los asientos estáticos del JSON
+      this.http.get('assets/selectAsientos.json').subscribe((data: any) => {
+        this.asientosData = data;
+        this.asientosAgrupados = this.agruparAsientos(this.asientosData);
+        console.log("Json estático asientos: ", this.asientosData);
+      });
+//Esta es la función que consumirá la API con los asientos dinámicos
     this.mostrarAsientos();
   }
   // dataSource = this.asientosData;
