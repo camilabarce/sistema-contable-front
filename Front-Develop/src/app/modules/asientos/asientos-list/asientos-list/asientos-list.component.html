@@ -7,18 +7,18 @@
         </button>
     </div>
     <mat-accordion>
-        <mat-expansion-panel *ngFor="let asientoGroup of asientosAgrupados">
+        <mat-expansion-panel *ngFor="let asientoGroup of asientosAgrupados"  class="mat-accordion-asientos">
             <mat-expansion-panel-header>
                 <mat-panel-title class="th panel-title"> 
                     <div class="th">Nro. Asiento: {{ asientoGroup.id_asiento }}</div>
                 </mat-panel-title>
                 <mat-panel-description>
-                    Descripción del asiento
+                    Descripción del asiento N° {{ asientoGroup.id_asiento }}
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <table class="table" mat-table [dataSource]="asientoGroup.asientos">
                 <ng-container matColumnDef="nro_asiento">
-                    <th class="th" mat-header-cell *matHeaderCellDef>No. Asiento</th>
+                    <th class="th" mat-header-cell *matHeaderCellDef>Nro. Asiento</th>
                     <td mat-cell *matCellDef="let row">{{row.id_asiento}}</td>
                 </ng-container>
                 <ng-container matColumnDef="fecha">
@@ -41,6 +41,7 @@
                     <th class="th" mat-header-cell *matHeaderCellDef>Haber</th>
                     <td mat-cell *matCellDef="let e">{{e.importe}}</td>
                 </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let asiento; columns: displayedColumns;"></tr>
             </table>
         </mat-expansion-panel>

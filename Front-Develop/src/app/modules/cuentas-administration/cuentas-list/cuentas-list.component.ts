@@ -63,8 +63,35 @@ rubrosFiltrados: any[] = [];
       }
    }
 
-   borrarCuenta(codigoCuenta: string) {
-    if (confirm('¿Estás seguro de que deseas eliminar esta cuenta?')) {
+   nuevaCuenta: string = '';
+   mostrarCampoNuevaCuenta: boolean = false;
+
+   agregarCuenta() {
+     if (this.grupoSeleccionado !== null && this.bloqueSeleccionado !== null && this.rubroSeleccionado !== null) {
+       this.mostrarCampoNuevaCuenta = true;
+        this.apiService.agregarCuenta(this.grupoSeleccionado, this.bloqueSeleccionado, this.rubroSeleccionado,this.nuevaCuenta).subscribe((resultado) => {
+            console.log("Cuenta agregada: ", resultado);
+            this.nuevaCuenta = '';
+            this.mostrarCuentas();
+        });
+    }
+  }
+
+  comunicarNuevaCuenta() {
+    if (this.nuevaCuenta.trim() !== '') {
+        this.agregarCuenta();
+        this.nuevaCuenta = '';
+        this.mostrarCampoNuevaCuenta = false;
+    }
+  }
+
+  cancelarNuevaCuenta(){
+    this.nuevaCuenta = '';
+    this.mostrarCampoNuevaCuenta = false;
+  }
+
+   borrarCuenta(codigoCuenta: string, nombreCuenta: string) {
+    if (confirm('¿Estás seguro de que deseas eliminar "' + nombreCuenta + '"?')) {
       this.apiService.borrarCuenta(codigoCuenta).subscribe((resultado) => {
         console.log("Código eliminado: ", resultado);
         this.mostrarCuentas();

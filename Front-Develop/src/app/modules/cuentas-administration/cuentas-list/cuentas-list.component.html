@@ -24,8 +24,18 @@
                 <mat-option *ngFor="let rubro of rubrosFiltrados" [value]="rubro.id_rubro">{{ rubro.nombre_rubro }}</mat-option>
             </mat-select>
         </mat-form-field>
-
         <button mat-button class="campos btn" (click)="mostrarCuentas()">Mostrar cuentas</button>
+        <button mat-button class="campos btn" (click)="agregarCuenta()">Agregar cuenta</button>
+    </mat-card-content>
+
+    <!-- Se activa al presionar "Agregar Cuenta" -->
+    <mat-card-content *ngIf="mostrarCampoNuevaCuenta" class="content nuevaCuenta">
+        <mat-form-field class="campos">
+            <mat-label>Nombre de la nueva cuenta</mat-label>
+            <input matInput [(ngModel)]="nuevaCuenta" placeholder="Nombre de la nueva cuenta">
+        </mat-form-field>
+        <button mat-button class="campos btn guardar" (click)="comunicarNuevaCuenta()">Guardar</button>
+        <button mat-button class="campos btn cancelar" (click)="cancelarNuevaCuenta()">Cancelar</button>
     </mat-card-content>
 </mat-card>
 <mat-card>
@@ -52,7 +62,7 @@
                 <a [routerLink]="['/cuentas/detail']" [queryParams]="{ nombreActual: element.nombre, codigoCuenta: element.codigo }">
                     <button class="btn1" mat-raised-button color="primary">Editar</button>
                 </a>                
-                <button class="btn1" mat-raised-button color="warn" (click)="borrarCuenta(element.codigo)">Eliminar</button>
+                <button class="btn1" mat-raised-button color="warn" (click)="borrarCuenta(element.codigo, element.nombre)">Eliminar</button>
             </td>
         </ng-container>
 

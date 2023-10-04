@@ -20,8 +20,8 @@ export class ApiService {
     return this.http.post(urlModificar, {});
   }
 
-  agregarCuenta(nuevaCuenta: string, grupo: number, bloque: number, rubro: number){
-    const urlAgregar = `${this.ApiUrl}/agregarCuenta/${nuevaCuenta}/${grupo}/${bloque}/${rubro}`;
+  agregarCuenta(grupo: number, bloque: number, rubro: number, nuevaCuenta: string){
+    const urlAgregar = `${this.ApiUrl}/agregarCuenta/${grupo}/${bloque}/${rubro}/${nuevaCuenta}`;
     return this.http.post(urlAgregar, {});
   }
 
