@@ -40,17 +40,17 @@
                  "nombre_bloque":"No corriente"
               },
               {
-                 "id_bloque":3,
+                 "id_bloque":5,
                  "id_grupo":3,
                  "nombre_bloque":"Capital"
               },
               {
-                 "id_bloque":4,
+                 "id_bloque":3,
                  "id_grupo":4,
                  "nombre_bloque":"Ordinario"
               },
               {
-                 "id_bloque":5,
+                 "id_bloque":4,
                  "id_grupo":4,
                  "nombre_bloque":"Extraordinario"
               }
@@ -90,7 +90,7 @@
                  "id_rubro":6,
                  "id_bloque":1,
                  "id_grupo":1,
-                 "nombre_rubro":"Otros bienes"
+                 "nombre_rubro":"Otros activos"
               },
               {
                  "id_rubro":7,
@@ -102,104 +102,188 @@
                  "id_rubro":8,
                  "id_bloque":2,
                  "id_grupo":1,
-                 "nombre_rubro":"Bienes de cambio"
+                 "nombre_rubro":"Otros creditos"
               },
               {
                  "id_rubro":9,
                  "id_bloque":2,
                  "id_grupo":1,
-                 "nombre_rubro":"Participacion permanente en sociedades"
+                 "nombre_rubro":"Bienes de cambio"
               },
               {
                  "id_rubro":10,
                  "id_bloque":2,
                  "id_grupo":1,
-                 "nombre_rubro":"Otras inversiones"
+                 "nombre_rubro":"Participacion permanente en sociedades"
               },
               {
                  "id_rubro":11,
                  "id_bloque":2,
                  "id_grupo":1,
-                 "nombre_rubro":"Bienes de uso"
+                 "nombre_rubro":"Otras inversiones"
               },
               {
                  "id_rubro":12,
                  "id_bloque":2,
                  "id_grupo":1,
-                 "nombre_rubro":"Activos intangibles"
+                 "nombre_rubro":"Bienes de uso"
               },
               {
                  "id_rubro":13,
                  "id_bloque":2,
                  "id_grupo":1,
-                 "nombre_rubro":"Otros activos"
+                 "nombre_rubro":"Activos intangibles"
               },
               {
                  "id_rubro":14,
                  "id_bloque":2,
                  "id_grupo":1,
-                 "nombre_rubro":"Llave de negocio"
+                 "nombre_rubro":"Otros activos"
               },
               {
                  "id_rubro":15,
-                 "id_bloque":1,
-                 "id_grupo":2,
-                 "nombre_rubro":"Deudas comerciales"
+                 "id_bloque":2,
+                 "id_grupo":1,
+                 "nombre_rubro":"Llave de negocio"
               },
               {
                  "id_rubro":16,
                  "id_bloque":1,
                  "id_grupo":2,
-                 "nombre_rubro":"Prestamos"
+                 "nombre_rubro":"Deudas comerciales"
               },
               {
                  "id_rubro":17,
                  "id_bloque":1,
                  "id_grupo":2,
-                 "nombre_rubro":"Remuneraciones y cargas sociales"
+                 "nombre_rubro":"Prestamos"
               },
               {
                  "id_rubro":18,
                  "id_bloque":1,
                  "id_grupo":2,
-                 "nombre_rubro":"Cargas fiscales"
+                 "nombre_rubro":"Remuneraciones y cargas sociales"
               },
               {
                  "id_rubro":19,
                  "id_bloque":1,
                  "id_grupo":2,
-                 "nombre_rubro":"Anticipo de clientes"
+                 "nombre_rubro":"Cargas fiscales"
               },
               {
                  "id_rubro":20,
                  "id_bloque":1,
                  "id_grupo":2,
-                 "nombre_rubro":"Dividendos a pagar"
+                 "nombre_rubro":"Anticipo de clientes"
               },
               {
                  "id_rubro":21,
                  "id_bloque":1,
                  "id_grupo":2,
-                 "nombre_rubro":"Otras deudas"
+                 "nombre_rubro":"Dividendos a pagar"
               },
               {
                  "id_rubro":22,
                  "id_bloque":1,
                  "id_grupo":2,
-                 "nombre_rubro":"Previsiones"
+                 "nombre_rubro":"Otras deudas"
               },
               {
                  "id_rubro":23,
-                 "id_bloque":2,
+                 "id_bloque":1,
                  "id_grupo":2,
-                 "nombre_rubro":"Duedas"
+                 "nombre_rubro":"Previsiones"
               },
+              {
+               "id_rubro":24,
+               "id_bloque":2,
+               "id_grupo":2,
+               "nombre_rubro":"Deudas"
+            },
               {
                  "id_rubro":25,
                  "id_bloque":2,
                  "id_grupo":2,
                  "nombre_rubro":"Previsiones"
-              }
+              },
+              {
+               "id_rubro":26,
+               "id_bloque":5,
+               "id_grupo":3,
+               "nombre_rubro":"Aporte de los propietarios"
+            },
+            {
+               "id_rubro":27,
+               "id_bloque":5,
+               "id_grupo":3,
+               "nombre_rubro":"Resultados acumulados"
+            },
+            {
+               "id_rubro":28,
+               "id_bloque":3,
+               "id_grupo":4,
+               "nombre_rubro":"Ventas netas de bienes y servicios"
+            },
+            {
+               "id_rubro":29,
+               "id_bloque":3,
+               "id_grupo":4,
+               "nombre_rubro":"Costos de los bienes vendidos y servicios prestado"
+            },
+            {
+               "id_rubro":30,
+               "id_bloque":3,
+               "id_grupo":4,
+               "nombre_rubro":"Gastos de comercializacion"
+            },
+            {
+               "id_rubro":31,
+               "id_bloque":3,
+               "id_grupo":4,
+               "nombre_rubro":"Gastos de administracion"
+            },
+            {
+               "id_rubro":32,
+               "id_bloque":3,
+               "id_grupo":4,
+               "nombre_rubro":"Resultados de inversiones en entes relacionados"
+            },
+            {
+               "id_rubro":33,
+               "id_bloque":3,
+               "id_grupo":4,
+               "nombre_rubro":"Depreciacion de la llave de negocio en los estados"
+            },
+            {
+               "id_rubro":34,
+               "id_bloque":3,
+               "id_grupo":4,
+               "nombre_rubro":"Resultados financieros y por tenencia"
+            },
+            {
+               "id_rubro":35,
+               "id_bloque":3,
+               "id_grupo":4,
+               "nombre_rubro":"Otros ingresos y egresos"
+            },
+            {
+               "id_rubro":36,
+               "id_bloque":3,
+               "id_grupo":4,
+               "nombre_rubro":"Impuesto a las ganancias"
+            },
+            {
+               "id_rubro":37,
+               "id_bloque":3,
+               "id_grupo":4,
+               "nombre_rubro":"Participacion minoritaria sobre los resultados"
+            },
+            {
+               "id_rubro":38,
+               "id_bloque":4,
+               "id_grupo":4,
+               "nombre_rubro":"Resultados extraordinarios"
+            }
            ]
         }
 ]
