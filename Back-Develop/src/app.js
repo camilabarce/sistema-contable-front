@@ -19,7 +19,7 @@ app.use(express.json()); //Para interpretar el formato JSON automáticamente (Ev
 app.get('/', cuentaController.inicio); // Carga de página principal (index.html)
 app.get('/mostrarCuentas/:grupoOption/:bloqueOption/:rubroOption', cuentaController.mostrarCuentas); 
 app.post('/modificarCuenta/:nuevoNombre/:codigoCuenta/:nombreActual', cuentaController.modificarCuenta);
-app.post('/agregarCuenta/:nuevaCuenta/:grupoOption/:bloqueOption/:rubroOption', cuentaController.agregarCuenta);
+app.post('/agregarCuenta/:grupoOption/:bloqueOption/:rubroOption/:nuevaCuenta', cuentaController.agregarCuenta);
 app.delete('/borrarCuenta/:codigoCuenta',cuentaController.borrarCuenta);
 app.post('/generarPDF', cuentaController.generarPDF);
 app.get('/mostrarAsientos/:grupoOption/:bloqueOption/:rubroOption', cuentaController.mostrarAsientos);
