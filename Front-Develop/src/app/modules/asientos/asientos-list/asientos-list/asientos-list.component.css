@@ -21,3 +21,6 @@
 .panel-title{
     margin: auto;
 }
+.mat-accordion-asientos{
+    box-shadow: 0 4px 10px -4px black;
+}
