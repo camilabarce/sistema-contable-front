@@ -32,7 +32,19 @@ export class AsientosListComponent implements OnInit {
       this.asientosData = data;
       this.asientosAgrupados = this.agruparAsientos(this.asientosData);
       console.log("Asientos: ", this.asientosData);
+      console.log("Asientos agrupados: ", this.asientosAgrupados);
     });
+  }
+
+  // Funcion para mostrar el importe en la columna Debe si es negativo y en Haber si es positivo
+  mostrarDebeHaber() {
+    let debe = this.asientosData.filter((asiento) => asiento.debe < 0);
+    let haber = this.asientosData.filter((asiento) => asiento.haber > 0);
+    if (debe) {
+      return debe;
+    } else {
+      return haber;
+    }
   }
   
   // Función para agrupar los asientos por id_asiento
@@ -51,9 +63,9 @@ export class AsientosListComponent implements OnInit {
     });
     return asientosAgrupados;
   }
+
 }
 interface AsientoGroup {
-    id_asiento: number;
-    asientos: any[]; // any[] representa los detalles de los asientos en el grupo
-  }
-  
+  id_asiento: number;
+  asientos: any[]; // any[] representa los detalles de los asientos en el grupo
+}

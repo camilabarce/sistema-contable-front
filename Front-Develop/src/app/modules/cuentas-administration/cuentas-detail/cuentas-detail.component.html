@@ -6,7 +6,7 @@
         </button>
     </mat-card-header>
     
-    <mat-card-title class="tituloEditar"> Usted modificará la cuenta "{{mostrarNombreActual()}}"</mat-card-title>
+    <mat-card-title class="tituloEditar"> Usted modificará la cuenta: "{{mostrarNombreActual()}}"</mat-card-title>
    
     <form class="form" [formGroup]="cuentasForm" (ngSubmit)="cambiarNombre()">
         <mat-form-field class="campo">
@@ -15,6 +15,6 @@
             </mat-label>
             <input matInput type="text" formControlName="nuevoNombre">
         </mat-form-field>
-        <button type="submit" mat-raised-button class="btn" color="basic" [disabled]="!cuentasForm.valid">Guardar</button>    
+        <button type="submit" mat-raised-button class="btn" color="basic" [disabled]="!cuentasForm.valid">Guardar cambios</button>    
     </form>
 </mat-card>

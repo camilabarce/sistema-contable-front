@@ -1,1 +1,20 @@
-<p>Acá agregaremos asientos.</p>
+<mat-card>
+    <mat-card-header>
+        <button type="button" mat-icon-button color="primary" routerLink="/asientos/list">
+            <mat-icon>arrow_back</mat-icon>
+            <h4>Volver</h4>
+        </button>
+    </mat-card-header>
+    <mat-card-title class="titulo">Nuevo asiento</mat-card-title>
+    <form class="form">
+        <mat-form-field>
+            <mat-label>Seleccione las cuentas</mat-label>
+            <mat-select multiple>
+                <mat-option>Cuenta1</mat-option>
+                <mat-option>Cuenta1</mat-option>
+                <mat-option>Cuenta1</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <button type="submit" mat-raised-button class="btn" color="basic" [disabled]="!asientosForm.valid">Guardar</button>
+    </form>
+</mat-card>
