@@ -22,14 +22,16 @@ app.post('/modificarCuenta/:nuevoNombre/:codigoCuenta/:nombreActual', cuentaCont
 app.post('/agregarCuenta/:grupoOption/:bloqueOption/:rubroOption/:nuevaCuenta', cuentaController.agregarCuenta);
 app.delete('/borrarCuenta/:codigoCuenta',cuentaController.borrarCuenta);
 app.post('/generarPDF', cuentaController.generarPDF);
-app.get('/mostrarAsientos/:grupoOption/:bloqueOption/:rubroOption', cuentaController.mostrarAsientos);
+app.get('/mostrarAsientos', cuentaController.mostrarAsientos);
+app.get('/llenarSelectAsientos', cuentaController.cuentasSelectAsiento);
+app.post('/insertarAsiento/:cuentaOption', cuentaController.insertarAsiento);
     
 // Establecemos la carpeta estática para servir el archivo 'index.html'
 app.use(express.static(path.join(__dirname)));
 
 // Iniciamos el servidor
 app.listen(port, ()=>{
-    console.log('Server conectado en puerto ', port);
+    console.log('Server conectado en puerto:', port);
 });
 
 module.exports = app;
