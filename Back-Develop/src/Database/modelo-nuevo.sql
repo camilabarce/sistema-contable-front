@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-10-2023 a las 17:30:22
+-- Tiempo de generación: 06-10-2023 a las 20:40:21
 -- Versión del servidor: 8.0.31
 -- Versión de PHP: 8.1.6
 
@@ -62,18 +62,40 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `borrarCuenta` (IN `codigoCuenta` VA
 	
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarAsiento` ()   BEGIN
+
+DECLARE nuevoIdAsiento INT;
+
+    SELECT MAX(id_asiento) INTO nuevoIdAsiento FROM asiento;
+    
+    IF nuevoIdAsiento IS NULL THEN
+        SET nuevoIdAsiento = 1;
+    ELSE
+        SET nuevoIdAsiento = nuevoIdAsiento + 1;
+    END IF;
+
+    INSERT INTO asiento (id_asiento, fecha) VALUES (nuevoIdAsiento, CURDATE());
+    
+    END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarCuentasEnAsiento` (IN `cuentaValue` INT(30))   INSERT INTO asiento_cuenta (id_asiento, id_cuenta, importe) VALUES ((SELECT MAX(A.id_asiento) FROM asiento A), cuentaValue, 0.00)$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `llenarSelectAsientos` ()   SELECT C.id_cuenta, C.nombre_cuenta as 'nombre' 
+FROM cuentas C
+WHERE C.mostrarCuenta = 1
+ORDER BY C.nombre_cuenta$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `modificarCuenta` (IN `nuevoNombre` VARCHAR(50), IN `codigoCuenta` VARCHAR(50), IN `nombreActual` VARCHAR(50))   UPDATE grupo G, bloque B, rubro R, cuentas C, tipo_cuentas TC
 SET C.nombre_cuenta = nuevoNombre
 WHERE CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta) = codigoCuenta
 AND C.nombre_cuenta = nombreActual
 AND (TC.id_grupo = G.id_grupo AND TC.id_bloque = B.id_bloque AND TC.id_rubro = R.id_rubro AND TC.id_cuenta = C.id_cuenta)$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarAsiento` (IN `grupoOption` INT, IN `bloqueOption` INT, IN `rubroOption` INT)   SELECT A.id_asiento,  DATE_FORMAT(A.fecha, '%Y-%m-%d') as 'fecha_asiento', CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta)  AS 'codigo', C.nombre_cuenta as 'cuenta', AC.importe 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarAsiento` ()   SELECT A.id_asiento,  DATE_FORMAT(A.fecha, '%Y-%m-%d') as 'fecha_asiento', CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta)  AS 'codigo', C.nombre_cuenta as 'cuenta', AC.importe 
 FROM grupo G, bloque B, rubro R, cuentas C, tipo_cuentas TC, asiento A, asiento_cuenta AC
 WHERE A.id_asiento = AC.id_asiento 
 AND C.id_cuenta = AC.id_cuenta
 AND G.id_grupo = TC.id_grupo AND B.id_bloque = TC.id_bloque AND R.id_rubro = TC.id_rubro AND C.id_cuenta = TC.id_cuenta
-AND G.id_grupo = grupoOption AND B.id_bloque = bloqueOption AND R.id_rubro = rubroOption
 ORDER BY A.id_asiento$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarCuentas` (IN `grupoOption` INT(11), IN `bloqueOption` INT(11), IN `rubroOption` INT(11))   select CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta) AS 'codigo',
@@ -97,14 +119,6 @@ CREATE TABLE `asiento` (
   `fecha` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Volcado de datos para la tabla `asiento`
---
-
-INSERT INTO `asiento` (`id_asiento`, `fecha`) VALUES
-(1, '2019-01-01'),
-(2, '2019-01-04');
-
 -- --------------------------------------------------------
 
 --
@@ -116,17 +130,6 @@ CREATE TABLE `asiento_cuenta` (
   `id_cuenta` int NOT NULL,
   `importe` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Volcado de datos para la tabla `asiento_cuenta`
---
-
-INSERT INTO `asiento_cuenta` (`id_asiento`, `id_cuenta`, `importe`) VALUES
-(1, 1, '1000.00'),
-(1, 8, '1100.00'),
-(1, 9, '-200.00'),
-(2, 10, '-900.00'),
-(2, 11, '800.00');
 
 -- --------------------------------------------------------
 
@@ -635,16 +638,6 @@ ALTER TABLE `tipo_cuentas`
   ADD KEY `id_cuenta` (`id_cuenta`);
 
 --
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
--- AUTO_INCREMENT de la tabla `asiento`
---
-ALTER TABLE `asiento`
-  MODIFY `id_asiento` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
 -- Restricciones para tablas volcadas
 --
 
@@ -652,8 +645,8 @@ ALTER TABLE `asiento`
 -- Filtros para la tabla `asiento_cuenta`
 --
 ALTER TABLE `asiento_cuenta`
-  ADD CONSTRAINT `asiento_cuenta_ibfk_1` FOREIGN KEY (`id_asiento`) REFERENCES `asiento` (`id_asiento`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `asiento_cuenta_ibfk_2` FOREIGN KEY (`id_cuenta`) REFERENCES `cuentas` (`id_cuenta`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `asiento_cuenta_ibfk_2` FOREIGN KEY (`id_cuenta`) REFERENCES `cuentas` (`id_cuenta`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `asiento_cuenta_ibfk_3` FOREIGN KEY (`id_asiento`) REFERENCES `asiento` (`id_asiento`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Filtros para la tabla `tipo_cuentas`
