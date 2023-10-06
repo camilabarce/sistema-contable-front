@@ -6,15 +6,13 @@
         </button>
     </mat-card-header>
     <mat-card-title class="titulo">Nuevo asiento</mat-card-title>
-    <form class="form">
-        <mat-form-field>
+    <form class="form" (submit)="guardarAsiento()">
+        <mat-form-field class="campo">
             <mat-label>Seleccione las cuentas</mat-label>
-            <mat-select multiple>
-                <mat-option>Cuenta1</mat-option>
-                <mat-option>Cuenta1</mat-option>
-                <mat-option>Cuenta1</mat-option>
+            <mat-select multiple [(ngModel)]="cuentasSeleccionadas" name="cuentasSeleccionadas">
+                <mat-option *ngFor="let cuenta of cuentasApi" [value]="cuenta.id_cuenta" class="cuentaOptionAsiento">{{ cuenta.nombre }}</mat-option>
             </mat-select>
         </mat-form-field>
-        <button type="submit" mat-raised-button class="btn" color="basic" [disabled]="!asientosForm.valid">Guardar</button>
-    </form>
+        <button type="button" mat-raised-button class="btn" color="basic" [disabled]="!asientosForm.valid" (click)="guardarAsiento()" [routerLink]="['/asientos/list']">Guardar</button>
+    </form>    
 </mat-card>

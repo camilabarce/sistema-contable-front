@@ -30,6 +30,16 @@ export class ApiService {
     return this.http.delete(urlBorrar, {});
   }
 
+  seleccionarCuentasAsientos(){
+    const urlSeleccionarCuentas = `${this.ApiUrl}/llenarSelectAsientos`;
+    return this.http.get(urlSeleccionarCuentas);
+  }
+
+  insertarAsiento(cuentasSeleccionadas: number[]) {
+    const urlInsertarAsiento = `${this.ApiUrl}/insertarAsiento/${cuentasSeleccionadas}`;
+    return this.http.post(urlInsertarAsiento, {cuentasSeleccionadas});
+  }
+
   mostrarAsientos() {
     const urlAsientos = `${this.ApiUrl}/mostrarAsientos`;
     return this.http.get(urlAsientos);

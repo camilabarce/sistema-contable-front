@@ -1,8 +1,19 @@
 .titulo {
     text-align: center;
+    padding-bottom: 2rem;
 }
 .form {
     display: flex;
     justify-content: center;
     gap: 1rem;
+}
+.campo {
+    width: 50vw;
+}
+.cuentaOptionAsiento{
+    text-transform: capitalize;
+}
+.btn {
+    height: 3.4rem;
+    margin: .25rem .5rem;
 }

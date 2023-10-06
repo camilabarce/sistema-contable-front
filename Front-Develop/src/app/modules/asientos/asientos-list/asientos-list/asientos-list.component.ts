@@ -15,16 +15,8 @@ export class AsientosListComponent implements OnInit {
   asientosAgrupados: AsientoGroup[] = [];
   
   ngOnInit() {
-//Esto es para visualizar los asientos estáticos del JSON
-      this.http.get('assets/selectAsientos.json').subscribe((data: any) => {
-        this.asientosData = data;
-        this.asientosAgrupados = this.agruparAsientos(this.asientosData);
-        console.log("Json estático asientos: ", this.asientosData);
-      });
-//Esta es la función que consumirá la API con los asientos dinámicos
     this.mostrarAsientos();
   }
-  // dataSource = this.asientosData;
   displayedColumns = ['nro_asiento', 'fecha', 'codigo', 'cuenta', 'debe', 'haber'];
 
   mostrarAsientos() {
@@ -38,8 +30,8 @@ export class AsientosListComponent implements OnInit {
 
   // Funcion para mostrar el importe en la columna Debe si es negativo y en Haber si es positivo
   mostrarDebeHaber() {
-    let debe = this.asientosData.filter((asiento) => asiento.debe < 0);
-    let haber = this.asientosData.filter((asiento) => asiento.haber > 0);
+    let debe = this.asientosData.filter((asiento) => asiento.importe < 0);
+    let haber = this.asientosData.filter((asiento) => asiento.importe > 0);
     if (debe) {
       return debe;
     } else {
