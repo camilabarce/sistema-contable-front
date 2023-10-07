@@ -18,14 +18,25 @@
         </mat-form-field>
         <!-- rubro -->
         <mat-form-field class="campos">
-            <!-- *ngIf="rubrosFiltrados.length > 0" -->
             <mat-label>Selecciona un rubro</mat-label>
             <mat-select [(ngModel)]="rubroSeleccionado">
                 <mat-option *ngFor="let rubro of rubrosFiltrados" [value]="rubro.id_rubro">{{ rubro.nombre_rubro }}</mat-option>
             </mat-select>
         </mat-form-field>
-        <button mat-button class="campos btn" (click)="mostrarCuentas()">Mostrar cuentas</button>
-        <button mat-button class="campos btn" (click)="agregarCuenta()">Agregar cuenta</button>
+        <button mat-button class="campos btn" (click)="mostrarCuentas()">
+            <mat-icon class="icono">pageview</mat-icon>
+            Mostrar cuentas
+        </button>
+
+        <!-- Se activan al presionar "Mostrar cuentas" -->
+        <button mat-button class="campos btn" (click)="agregarCuenta()" *ngIf="mostrarBotonAgregar">
+            <mat-icon class="icono">library_add</mat-icon>
+            Agregar cuenta
+        </button>
+        <button class="campos btn" mat-raised-button color="primary" (click)="generarPdf()" *ngIf="mostrarBotonPdf">
+            Generar PDF
+            <mat-icon class="iconoPdf">description</mat-icon>
+        </button>
     </mat-card-content>
 
     <!-- Se activa al presionar "Agregar Cuenta" -->
@@ -67,8 +78,7 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>  
     </table>
-
 </mat-card>
 

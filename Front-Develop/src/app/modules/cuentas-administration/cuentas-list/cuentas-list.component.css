@@ -30,3 +30,13 @@
 .btn1 {
     margin-right: 1rem;
 }
+.icono{
+    transform: scale(2.2);
+    color: rgb(137, 130, 238);
+    padding-right: 4%;
+}
+.iconoPdf{
+    transform: scale(2.2);
+    color: rgb(247, 247, 248);
+    padding-right: 4%;
+}

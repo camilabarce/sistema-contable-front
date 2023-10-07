@@ -2,12 +2,24 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ApiService } from 'src/app/services/api-service/api-service.service';
+import swal from'sweetalert2';
+import { PdfMakeWrapper, Table } from 'pdfmake-wrapper';
+import { ITable } from 'pdfmake-wrapper/lib/interfaces'; 
+import * as pdfMake from "pdfmake/build/pdfmake";
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+(<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
+
+
+// Dejo link de la documentacion de la libreria para PDF por si quieren personalizarlo
+// https://pdfmake.github.io/docs/0.1/getting-started/client-side/
+PdfMakeWrapper.setFonts(pdfFonts);
 
 @Component({
   selector: 'app-cuentas-list',
   templateUrl: './cuentas-list.component.html',
   styleUrls: ['./cuentas-list.component.css']
 })
+
 
 export class CuentasListComponent implements OnInit {
 
@@ -53,14 +65,19 @@ rubrosFiltrados: any[] = [];
   // Consumimos las API´s
   
   cuentasData: any[] = [];
-  
+  mostrarBotonAgregar: boolean = false;
+  mostrarBotonPdf: boolean = false;
+
   mostrarCuentas() {
       if (this.grupoSeleccionado !== null && this.bloqueSeleccionado !== null && this.rubroSeleccionado !== null) {       
             this.apiService.mostrarCuentas(this.grupoSeleccionado, this.bloqueSeleccionado, this.rubroSeleccionado).subscribe((data) => {
                this.cuentasData = data;
                console.log(this.cuentasData);
+               this.mostrarBotonPdf = true;
+               this.mostrarBotonAgregar = true;
             });  
       }
+      return this.cuentasData;
    }
 
    nuevaCuenta: string = '';
@@ -90,16 +107,60 @@ rubrosFiltrados: any[] = [];
     this.mostrarCampoNuevaCuenta = false;
   }
 
-   borrarCuenta(codigoCuenta: string, nombreCuenta: string) {
-    if (confirm('¿Estás seguro de que deseas eliminar "' + nombreCuenta + '"?')) {
-      this.apiService.borrarCuenta(codigoCuenta).subscribe((resultado) => {
-        console.log("Código eliminado: ", resultado);
-        this.mostrarCuentas();
-      });
-    }
+  borrarCuenta(codigoCuenta: string, nombreCuenta: string) {
+    swal.fire({
+      title: '¿Estás seguro?',
+      text: '¿Estás seguro de que deseas eliminar "' + nombreCuenta + '"?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.apiService.borrarCuenta(codigoCuenta).subscribe((resultado) => {
+          console.log("Código eliminado: ", resultado);
+          this.mostrarCuentas();
+          swal.fire('Eliminación exitosa', 'La cuenta se ha eliminado con éxito.', 'success');
+        });
+      }
+    });
   }
   
 dataSource = this.cuentasData;
 displayedColumns = ['nombre', 'codigo', 'saldo', 'acciones'];
- 
+
+ async generarPdf(){
+  const pdf = new PdfMakeWrapper();
+  const datosParaPdf = this.cuentasData;
+
+  pdf.add(this.armarPdf(datosParaPdf));
+  pdf.watermark({text: 'Plan de cuentas', color: 'red', opacity: 0.1, bold: false, italics: false, width:15});
+  pdf.create().open();
+}
+
+extraerDatosParaPdf(data: any[]){
+ return data.map(fila => [fila.nombre, fila.codigo, fila.saldo]);
+}
+
+ armarPdf(data: any[]): ITable{
+  return new Table([
+    ["Nombre", "Código", "Saldo"],
+    ...this.extraerDatosParaPdf(data)
+  ])
+  .alignment('center')
+  .color('white')
+  .fontSize(15)
+  .decorationStyle('dotted')
+  .widths('*')
+  .heights(altura =>{
+    return altura === 0 ? 30: 40;
+  })
+  .layout({
+    fillColor: rowIndex => {
+      return rowIndex === 0 ? '#484B4A' : '#852FEC';
+    }
+  })
+  .end;
+ }
+
 }
