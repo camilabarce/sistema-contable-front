@@ -4,7 +4,6 @@ const mostrarCuentas = require('./mostrarCuentasController');
 const modificarCuenta = require('./modificarCuentaController');
 const agregarCuenta = require('./agregarCuentaController');
 const borrarCuenta = require('./borrarCuentaController');
-const generarPDF = require('./generarPdfController');
 const mostrarAsientos = require('./mostrarAsientosController');
 const cuentasSelectAsiento = require('./llenarSelectAsientosController');
 const insertarAsiento = require('./insertarAsientoController');
@@ -16,7 +15,6 @@ const cuentaController = {
   modificarCuenta,
   agregarCuenta,
   borrarCuenta,
-  generarPDF,
   mostrarAsientos,
   cuentasSelectAsiento,
   insertarAsiento

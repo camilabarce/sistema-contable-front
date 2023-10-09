@@ -21,7 +21,6 @@ app.get('/mostrarCuentas/:grupoOption/:bloqueOption/:rubroOption', cuentaControl
 app.post('/modificarCuenta/:nuevoNombre/:codigoCuenta/:nombreActual', cuentaController.modificarCuenta);
 app.post('/agregarCuenta/:grupoOption/:bloqueOption/:rubroOption/:nuevaCuenta', cuentaController.agregarCuenta);
 app.delete('/borrarCuenta/:codigoCuenta',cuentaController.borrarCuenta);
-app.post('/generarPDF', cuentaController.generarPDF);
 app.get('/mostrarAsientos', cuentaController.mostrarAsientos);
 app.get('/llenarSelectAsientos', cuentaController.cuentasSelectAsiento);
 app.post('/insertarAsiento/:cuentaOption', cuentaController.insertarAsiento);
