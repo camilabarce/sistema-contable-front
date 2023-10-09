@@ -132,19 +132,21 @@ displayedColumns = ['nombre', 'codigo', 'saldo', 'acciones'];
  async generarPdf(){
   const pdf = new PdfMakeWrapper();
   const datosParaPdf = this.cuentasData;
+  const rubroElegido = this.rubrosFiltrados.find(rubro => rubro.id_rubro === this.rubroSeleccionado);
 
+  pdf.header({text: `Cuentas del rubro: "${rubroElegido.nombre_rubro}"`, alignment: 'center', margin:[0,10], fontSize: 16});
   pdf.add(this.armarPdf(datosParaPdf));
   pdf.watermark({text: 'Plan de cuentas', color: 'red', opacity: 0.1, bold: false, italics: false, width:15});
   pdf.create().open();
 }
 
 extraerDatosParaPdf(data: any[]){
- return data.map(fila => [fila.nombre, fila.codigo, fila.saldo]);
+ return data.map(fila => [fila.nombre, fila.codigo, fila.tipo, fila.saldo]);
 }
 
  armarPdf(data: any[]): ITable{
   return new Table([
-    ["Nombre", "Código", "Saldo"],
+    ["Nombre", "Código", "Tipo", "Saldo"],
     ...this.extraerDatosParaPdf(data)
   ])
   .alignment('center')
