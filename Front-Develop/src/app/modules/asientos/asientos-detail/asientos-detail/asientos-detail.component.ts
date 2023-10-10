@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/services/api-service/api-service.service';  
 
 @Component({
@@ -9,12 +9,14 @@ import { ApiService } from 'src/app/services/api-service/api-service.service';
 })
 export class AsientosDetailComponent implements OnInit {
   asientosForm: FormGroup;
+  importe: any;
+  fecha: any;
 
   constructor(private fb: FormBuilder, private apiService: ApiService) {
     this.asientosForm = this.fb.group({
-    //   cuentas: [''],
-    //   debe: [''],
-    //   haber: ['']
+      fecha: ['', Validators.required],
+      cuentas: ['', Validators.required],
+
     });
   }
 

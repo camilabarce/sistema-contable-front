@@ -7,11 +7,22 @@
     </mat-card-header>
     <mat-card-title class="titulo">Nuevo asiento</mat-card-title>
     <form class="form" (submit)="guardarAsiento()">
-        <mat-form-field class="campo">
+        <mat-form-field>
+            <mat-label>Ingrese la fecha</mat-label>
+            <input matInput [matDatepicker]="picker" [(ngModel)]="fecha" name="fecha" required>
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"><mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>   
+        </mat-form-field>
+        <mat-form-field>
             <mat-label>Seleccione las cuentas</mat-label>
-            <mat-select multiple [(ngModel)]="cuentasSeleccionadas" name="cuentasSeleccionadas">
-                <mat-option *ngFor="let cuenta of cuentasApi" [value]="cuenta.id_cuenta" class="cuentaOptionAsiento">{{ cuenta.nombre }}</mat-option>
+            <mat-select multiple [(ngModel)]="cuentasSeleccionadas" class="capitalize" name="cuentasSeleccionadas">
+                <mat-option *ngFor="let cuenta of cuentasApi" [value]="cuenta.id_cuenta" class="capitalize">{{ cuenta.nombre }}</mat-option>
             </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Ingrese el importe</mat-label>
+            <input matInput type="number" step=0.01 [(ngModel)]="importe" name="importe" required>
         </mat-form-field>
         <button type="button" mat-raised-button class="btn" color="basic" [disabled]="!asientosForm.valid" (click)="guardarAsiento()" [routerLink]="['/asientos/list']">Guardar</button>
     </form>    

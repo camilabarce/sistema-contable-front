@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ApiService } from 'src/app/services/api-service/api-service.service';
 import swal from'sweetalert2';
