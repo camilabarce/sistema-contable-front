@@ -26,7 +26,7 @@ export class AsientosListComponent implements OnInit {
       console.log("Asientos agrupados: ", this.asientosAgrupados);
     });
   }
-
+  
   // Función para agrupar los asientos por id_asiento
   agruparAsientos(asientos: any[]): any[] {
     const asientosAgrupados: AsientoGroup[] = [];
@@ -43,7 +43,6 @@ export class AsientosListComponent implements OnInit {
     });
     return asientosAgrupados;
   }
-
 }
 interface AsientoGroup {
   id_asiento: number;
