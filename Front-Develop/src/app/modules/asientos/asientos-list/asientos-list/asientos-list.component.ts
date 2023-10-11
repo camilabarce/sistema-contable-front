@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { ApiService } from 'src/app/services/api-service/api-service.service';
 
 @Component({
@@ -9,7 +8,7 @@ import { ApiService } from 'src/app/services/api-service/api-service.service';
 })
 export class AsientosListComponent implements OnInit {
   
-  constructor(private http: HttpClient, private apiService: ApiService) { }
+  constructor(private apiService: ApiService) { }
 
   asientosData: any[] = [];
   asientosAgrupados: AsientoGroup[] = [];
@@ -28,17 +27,6 @@ export class AsientosListComponent implements OnInit {
     });
   }
 
-  // Funcion para mostrar el importe en la columna Debe si es negativo y en Haber si es positivo
-  mostrarDebeHaber() {
-    let debe = this.asientosData.filter((asiento) => asiento.importe < 0);
-    let haber = this.asientosData.filter((asiento) => asiento.importe > 0);
-    if (debe) {
-      return debe;
-    } else {
-      return haber;
-    }
-  }
-  
   // Función para agrupar los asientos por id_asiento
   agruparAsientos(asientos: any[]): any[] {
     const asientosAgrupados: AsientoGroup[] = [];
