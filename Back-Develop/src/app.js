@@ -23,7 +23,7 @@ app.post('/agregarCuenta/:grupoOption/:bloqueOption/:rubroOption/:nuevaCuenta', 
 app.delete('/borrarCuenta/:codigoCuenta',cuentaController.borrarCuenta);
 app.get('/mostrarAsientos', cuentaController.mostrarAsientos);
 app.get('/llenarSelectAsientos', cuentaController.cuentasSelectAsiento);
-app.post('/insertarAsiento/:cuentaOption', cuentaController.insertarAsiento);
+app.post('/insertarAsiento', cuentaController.insertarAsiento);
     
 // Establecemos la carpeta estática para servir el archivo 'index.html'
 app.use(express.static(path.join(__dirname)));

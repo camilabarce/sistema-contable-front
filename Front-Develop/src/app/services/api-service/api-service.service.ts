@@ -35,8 +35,8 @@ export class ApiService {
     return this.http.get(urlSeleccionarCuentas);
   }
 
-  insertarAsiento(cuentasSeleccionadas: number[]) {
-    const urlInsertarAsiento = `${this.ApiUrl}/insertarAsiento/${cuentasSeleccionadas}`;
+  insertarAsiento(cuentasSeleccionadas: any[]) {
+    const urlInsertarAsiento = `${this.ApiUrl}/insertarAsiento`;
     return this.http.post(urlInsertarAsiento, {cuentasSeleccionadas});
   }
 

@@ -30,7 +30,9 @@ export class AsientosDetailComponent implements OnInit {
     });
   }
   
+  mostrarTabla: boolean = false;
   cuentaSeleccionada: number | null = null;
+  cuentasDeshabilitadas: number[] = [];
   debe: number | null = null;
   haber: number | null = null;  
   cuentasSeleccionadas: any[] = [];
@@ -40,31 +42,47 @@ export class AsientosDetailComponent implements OnInit {
     if (this.cuentaSeleccionada !== null) {
       const cuenta = this.cuentasApi.find((cuenta) => cuenta.id_cuenta === this.cuentaSeleccionada);
       if (cuenta) {
+        this.mostrarTabla = true;
         // Dependiendo de si el valor se ingresó en Debe o Haber, se asigna el importe correspondiente
         const importe = (this.debe !== null) ? this.debe : ((this.haber !== null) ? -this.haber : 0);
         this.cuentasSeleccionadas.push({ id_cuenta: cuenta.id_cuenta, importe });
+        this.cuentasDeshabilitadas.push(cuenta.id_cuenta);// Esto es para anular la cuenta elegida del mat-option
         this.cuentaSeleccionada = null;
         this.debe = null;
         this.haber = null;
-
-        // Actualiza el dataSource con las cuentas seleccionadas
-        this.dataSource.data = this.cuentasSeleccionadas;
+        this.dataSource.data = this.cuentasSeleccionadas;// Actualiza el dataSource con las cuentas seleccionadas
       }
     }
-    console.log(this.cuentasSeleccionadas);
+    console.log("Preseleccion:" , this.cuentasSeleccionadas);
+  }
+
+  eliminarCuentaDelAsiento(idCuenta: number) {
+    const indiceCuenta = this.cuentasSeleccionadas.findIndex(cuenta => cuenta.id_cuenta === idCuenta);
+    if (indiceCuenta !== -1) { //Es (-1) cuando no se encuentra el índice
+      this.cuentasSeleccionadas.splice(indiceCuenta, 1); //Eliminamos la cuenta de la tabla
+      this.dataSource.data = this.cuentasSeleccionadas; // Actualizamos las cuentas
+      
+      //Hago lo mismo pero para que aparezcan las cuentas que han sido deshabilitadas
+      const indiceCuentaDeshabilitada = this.cuentasDeshabilitadas.indexOf(idCuenta);
+      if (indiceCuentaDeshabilitada !== -1) {
+        this.cuentasDeshabilitadas.splice(indiceCuentaDeshabilitada, 1);//Quito la cuenta de la lista de deshabilitadas
+      }
+
+      //Esto es para ocultar la tabla
+      if (this.cuentasSeleccionadas.length === 0) {
+        this.mostrarTabla = false;
+      }
+    }
   }
   
   buscarNombreCuenta(id: number): string {
     const cuenta = this.cuentasApi.find((cuenta) => cuenta.id_cuenta === id);
     return cuenta ? cuenta.nombre : '';
-
   }
   
-  // cuentasSeleccionadas: number[] = [];
-  
-  // guardarAsiento() {
-  //   this.apiService.insertarAsiento(this.cuentasSeleccionadas).subscribe((response: any) => {
-  //     console.log("Asiento guardado: ", response);
-  //   });
-  // }
+  guardarAsiento() {
+    this.apiService.insertarAsiento(this.cuentasSeleccionadas).subscribe((response: any) => {
+      console.log("Asiento guardado: ", response);
+    });
+  }
 }
