@@ -2,10 +2,10 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 06-10-2023 a las 20:40:21
+-- Servidor: 127.0.0.1:3306
+-- Tiempo de generación: 20-10-2023 a las 19:26:45
 -- Versión del servidor: 8.0.31
--- Versión de PHP: 8.1.6
+-- Versión de PHP: 8.0.26
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -25,6 +25,7 @@ DELIMITER $$
 --
 -- Procedimientos
 --
+DROP PROCEDURE IF EXISTS `agregarCuenta`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `agregarCuenta` (IN `grupoOption` INT(30), IN `bloqueOption` INT(30), IN `rubroOption` INT(30), IN `nuevaCuenta` VARCHAR(50))   BEGIN
 
 DECLARE ultimoIdCuenta INT;
@@ -50,6 +51,7 @@ VALUES (
 
 END$$
 
+DROP PROCEDURE IF EXISTS `borrarCuenta`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `borrarCuenta` (IN `codigoCuenta` VARCHAR(9))   BEGIN
 	
 	UPDATE grupo g, bloque b, rubro r, cuentas c, tipo_cuentas tc
@@ -62,12 +64,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `borrarCuenta` (IN `codigoCuenta` VA
 	
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarAsiento` ()   BEGIN
-
-DECLARE nuevoIdAsiento INT;
+DROP PROCEDURE IF EXISTS `insertarAsiento`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarAsiento` (IN `jsonCuentasAsientos` JSON)   BEGIN
+    DECLARE nuevoIdAsiento INT;
+    DECLARE numerosJSON JSON;
+    DECLARE cuentaValue INT;
+    DECLARE importe DECIMAL(10, 2);
 
     SELECT MAX(id_asiento) INTO nuevoIdAsiento FROM asiento;
-    
+
     IF nuevoIdAsiento IS NULL THEN
         SET nuevoIdAsiento = 1;
     ELSE
@@ -75,29 +80,43 @@ DECLARE nuevoIdAsiento INT;
     END IF;
 
     INSERT INTO asiento (id_asiento, fecha) VALUES (nuevoIdAsiento, CURDATE());
-    
-    END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarCuentasEnAsiento` (IN `cuentaValue` INT(30))   INSERT INTO asiento_cuenta (id_asiento, id_cuenta, importe) VALUES ((SELECT MAX(A.id_asiento) FROM asiento A), cuentaValue, 0.00)$$
+    SET numerosJSON = JSON_UNQUOTE(JSON_EXTRACT(jsonCuentasAsientos, '$.CuentasParaAsiento'));
 
+    SET cuentaValue = JSON_UNQUOTE(JSON_EXTRACT(numerosJSON, '$[0].id_cuenta'));
+    SET importe = JSON_UNQUOTE(JSON_EXTRACT(numerosJSON, '$[0].importe'));
+
+    WHILE cuentaValue IS NOT NULL DO
+        INSERT INTO asiento_cuenta (id_asiento, id_cuenta, importe)
+        VALUES (nuevoIdAsiento, cuentaValue, importe);
+
+        SET numerosJSON = JSON_REMOVE(numerosJSON, '$[0]');
+        SET cuentaValue = JSON_UNQUOTE(JSON_EXTRACT(numerosJSON, '$[0].id_cuenta'));
+        SET importe = JSON_UNQUOTE(JSON_EXTRACT(numerosJSON, '$[0].importe'));
+    END WHILE;
+END$$
+
+DROP PROCEDURE IF EXISTS `llenarSelectAsientos`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `llenarSelectAsientos` ()   SELECT C.id_cuenta, C.nombre_cuenta as 'nombre' 
 FROM cuentas C
 WHERE C.mostrarCuenta = 1
 ORDER BY C.nombre_cuenta$$
 
+DROP PROCEDURE IF EXISTS `modificarCuenta`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `modificarCuenta` (IN `nuevoNombre` VARCHAR(50), IN `codigoCuenta` VARCHAR(50), IN `nombreActual` VARCHAR(50))   UPDATE grupo G, bloque B, rubro R, cuentas C, tipo_cuentas TC
 SET C.nombre_cuenta = nuevoNombre
 WHERE CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta) = codigoCuenta
 AND C.nombre_cuenta = nombreActual
 AND (TC.id_grupo = G.id_grupo AND TC.id_bloque = B.id_bloque AND TC.id_rubro = R.id_rubro AND TC.id_cuenta = C.id_cuenta)$$
 
+DROP PROCEDURE IF EXISTS `mostrarAsiento`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarAsiento` ()   SELECT A.id_asiento,  DATE_FORMAT(A.fecha, '%Y-%m-%d') as 'fecha_asiento', CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta)  AS 'codigo', C.nombre_cuenta as 'cuenta', AC.importe 
 FROM grupo G, bloque B, rubro R, cuentas C, tipo_cuentas TC, asiento A, asiento_cuenta AC
 WHERE A.id_asiento = AC.id_asiento 
 AND C.id_cuenta = AC.id_cuenta
-AND G.id_grupo = TC.id_grupo AND B.id_bloque = TC.id_bloque AND R.id_rubro = TC.id_rubro AND C.id_cuenta = TC.id_cuenta
-ORDER BY A.id_asiento$$
+AND G.id_grupo = TC.id_grupo AND B.id_bloque = TC.id_bloque AND R.id_rubro = TC.id_rubro AND C.id_cuenta = TC.id_cuenta$$
 
+DROP PROCEDURE IF EXISTS `mostrarCuentas`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarCuentas` (IN `grupoOption` INT(11), IN `bloqueOption` INT(11), IN `rubroOption` INT(11))   select CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta) AS 'codigo',
        CONCAT(UPPER(SUBSTRING(C.nombre_cuenta, 1, 1)), LOWER(SUBSTRING(C.nombre_cuenta, 2))) AS 'nombre',
        CONCAT(UPPER(SUBSTRING(CONCAT(G.nombre_grupo, ' ', B.nombre_bloque), 1, 1)), LOWER(SUBSTRING(CONCAT(G.nombre_grupo, ' ', B.nombre_bloque), 2))) AS 'tipo', C.saldo_cuenta AS 'saldo'
@@ -114,9 +133,11 @@ DELIMITER ;
 -- Estructura de tabla para la tabla `asiento`
 --
 
-CREATE TABLE `asiento` (
+DROP TABLE IF EXISTS `asiento`;
+CREATE TABLE IF NOT EXISTS `asiento` (
   `id_asiento` int NOT NULL,
-  `fecha` date NOT NULL
+  `fecha` date NOT NULL,
+  PRIMARY KEY (`id_asiento`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -125,10 +146,13 @@ CREATE TABLE `asiento` (
 -- Estructura de tabla para la tabla `asiento_cuenta`
 --
 
-CREATE TABLE `asiento_cuenta` (
+DROP TABLE IF EXISTS `asiento_cuenta`;
+CREATE TABLE IF NOT EXISTS `asiento_cuenta` (
   `id_asiento` int NOT NULL,
   `id_cuenta` int NOT NULL,
-  `importe` decimal(10,2) NOT NULL
+  `importe` decimal(10,2) NOT NULL,
+  KEY `id_asiento` (`id_asiento`,`id_cuenta`),
+  KEY `id_cuenta` (`id_cuenta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -137,10 +161,12 @@ CREATE TABLE `asiento_cuenta` (
 -- Estructura de tabla para la tabla `bloque`
 --
 
-CREATE TABLE `bloque` (
+DROP TABLE IF EXISTS `bloque`;
+CREATE TABLE IF NOT EXISTS `bloque` (
   `id_bloque` int NOT NULL DEFAULT '0',
   `nombre_bloque` varchar(50) NOT NULL,
-  `cod_bloque` varchar(2) NOT NULL
+  `cod_bloque` varchar(2) NOT NULL,
+  PRIMARY KEY (`id_bloque`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -160,12 +186,14 @@ INSERT INTO `bloque` (`id_bloque`, `nombre_bloque`, `cod_bloque`) VALUES
 -- Estructura de tabla para la tabla `cuentas`
 --
 
-CREATE TABLE `cuentas` (
+DROP TABLE IF EXISTS `cuentas`;
+CREATE TABLE IF NOT EXISTS `cuentas` (
   `id_cuenta` int NOT NULL,
   `nombre_cuenta` varchar(50) NOT NULL,
   `cod_cuenta` varchar(3) NOT NULL,
   `saldo_cuenta` decimal(10,2) NOT NULL,
-  `mostrarCuenta` tinyint(1) NOT NULL
+  `mostrarCuenta` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id_cuenta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -338,10 +366,12 @@ INSERT INTO `cuentas` (`id_cuenta`, `nombre_cuenta`, `cod_cuenta`, `saldo_cuenta
 -- Estructura de tabla para la tabla `grupo`
 --
 
-CREATE TABLE `grupo` (
+DROP TABLE IF EXISTS `grupo`;
+CREATE TABLE IF NOT EXISTS `grupo` (
   `id_grupo` int NOT NULL,
   `nombre_grupo` varchar(50) NOT NULL,
-  `cod_grupo` varchar(2) NOT NULL
+  `cod_grupo` varchar(2) NOT NULL,
+  PRIMARY KEY (`id_grupo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -360,10 +390,12 @@ INSERT INTO `grupo` (`id_grupo`, `nombre_grupo`, `cod_grupo`) VALUES
 -- Estructura de tabla para la tabla `rubro`
 --
 
-CREATE TABLE `rubro` (
+DROP TABLE IF EXISTS `rubro`;
+CREATE TABLE IF NOT EXISTS `rubro` (
   `id_rubro` int NOT NULL,
   `nombre_rubro` varchar(50) NOT NULL,
-  `cod_rubro` varchar(2) NOT NULL
+  `cod_rubro` varchar(2) NOT NULL,
+  PRIMARY KEY (`id_rubro`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -416,11 +448,16 @@ INSERT INTO `rubro` (`id_rubro`, `nombre_rubro`, `cod_rubro`) VALUES
 -- Estructura de tabla para la tabla `tipo_cuentas`
 --
 
-CREATE TABLE `tipo_cuentas` (
+DROP TABLE IF EXISTS `tipo_cuentas`;
+CREATE TABLE IF NOT EXISTS `tipo_cuentas` (
   `id_grupo` int NOT NULL,
   `id_bloque` int NOT NULL,
   `id_rubro` int NOT NULL,
-  `id_cuenta` int NOT NULL
+  `id_cuenta` int NOT NULL,
+  KEY `id_grupo` (`id_grupo`),
+  KEY `id_bloque` (`id_bloque`),
+  KEY `id_rubro` (`id_rubro`),
+  KEY `id_cuenta` (`id_cuenta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -586,56 +623,6 @@ INSERT INTO `tipo_cuentas` (`id_grupo`, `id_bloque`, `id_rubro`, `id_cuenta`) VA
 (4, 3, 37, 156),
 (4, 4, 38, 157),
 (4, 4, 38, 158);
-
---
--- Índices para tablas volcadas
---
-
---
--- Indices de la tabla `asiento`
---
-ALTER TABLE `asiento`
-  ADD PRIMARY KEY (`id_asiento`);
-
---
--- Indices de la tabla `asiento_cuenta`
---
-ALTER TABLE `asiento_cuenta`
-  ADD KEY `id_asiento` (`id_asiento`,`id_cuenta`),
-  ADD KEY `id_cuenta` (`id_cuenta`);
-
---
--- Indices de la tabla `bloque`
---
-ALTER TABLE `bloque`
-  ADD PRIMARY KEY (`id_bloque`);
-
---
--- Indices de la tabla `cuentas`
---
-ALTER TABLE `cuentas`
-  ADD PRIMARY KEY (`id_cuenta`);
-
---
--- Indices de la tabla `grupo`
---
-ALTER TABLE `grupo`
-  ADD PRIMARY KEY (`id_grupo`);
-
---
--- Indices de la tabla `rubro`
---
-ALTER TABLE `rubro`
-  ADD PRIMARY KEY (`id_rubro`);
-
---
--- Indices de la tabla `tipo_cuentas`
---
-ALTER TABLE `tipo_cuentas`
-  ADD KEY `id_grupo` (`id_grupo`),
-  ADD KEY `id_bloque` (`id_bloque`),
-  ADD KEY `id_rubro` (`id_rubro`),
-  ADD KEY `id_cuenta` (`id_cuenta`);
 
 --
 -- Restricciones para tablas volcadas
