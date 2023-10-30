@@ -37,6 +37,7 @@ export class AsientosDetailComponent implements OnInit {
   haber: number | null = null;  
   cuentasSeleccionadas: any[] = [];
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>(this.cuentasSeleccionadas);
+  total: number = 0;
 
   agregarCuenta() {
     if (this.cuentaSeleccionada !== null) {
@@ -47,6 +48,10 @@ export class AsientosDetailComponent implements OnInit {
         const importe = (this.debe !== null) ? this.debe : ((this.haber !== null) ? -this.haber : 0);
         this.cuentasSeleccionadas.push({ id_cuenta: cuenta.id_cuenta, importe });
         this.cuentasDeshabilitadas.push(cuenta.id_cuenta);// Esto es para anular la cuenta elegida del mat-option
+
+        // Actualiza el total
+        this.total += importe;
+
         this.cuentaSeleccionada = null;
         this.debe = null;
         this.haber = null;
@@ -61,6 +66,9 @@ export class AsientosDetailComponent implements OnInit {
     if (indiceCuenta !== -1) { //Es (-1) cuando no se encuentra el índice
       this.cuentasSeleccionadas.splice(indiceCuenta, 1); //Eliminamos la cuenta de la tabla
       this.dataSource.data = this.cuentasSeleccionadas; // Actualizamos las cuentas
+      
+      // Recalcula el total
+      this.total = this.cuentasSeleccionadas.reduce((acc, cuenta) => acc + cuenta.importe, 0);
       
       //Hago lo mismo pero para que aparezcan las cuentas que han sido deshabilitadas
       const indiceCuentaDeshabilitada = this.cuentasDeshabilitadas.indexOf(idCuenta);

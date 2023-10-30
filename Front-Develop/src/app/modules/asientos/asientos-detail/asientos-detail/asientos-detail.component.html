@@ -7,7 +7,6 @@
     </mat-card-header>
     <mat-card-title class="titulo">Nuevo asiento</mat-card-title>
     <form class="form">
-        <!-- (submit)="guardarAsiento()" -->
         <mat-form-field>
             <mat-label>Seleccione las cuentas</mat-label>
             <mat-select [(ngModel)]="cuentaSeleccionada" class="capitalize" name="cuenta">
@@ -49,9 +48,16 @@
                     <td mat-cell *matCellDef="let cuenta">
                       <button mat-button color="warn" (click)="eliminarCuentaDelAsiento(cuenta.id_cuenta)">Eliminar</button>
                     </td>
-                </ng-container>                  
-                <tr mat-header-row *matHeaderRowDef="['cuenta', 'debe', 'haber', 'eliminar']"></tr>
-                <tr mat-row *matRowDef="let row; columns: ['cuenta', 'debe', 'haber', 'eliminar'];"></tr>
+                </ng-container>    
+                <!-- Columna Total -->
+                <ng-container matColumnDef="total">
+                    <th mat-header-cell *matHeaderCellDef>Total</th>
+                    <!-- El total solo se mostrará en la última fila de la tabla -->
+                    <td mat-cell *matCellDef="let cuenta; let last = last" [ngStyle]="{'color': last ? 'black' : 'white'}">
+                        {{ last ? total : '' }}</td>
+                </ng-container>              
+                <tr mat-header-row *matHeaderRowDef="['cuenta', 'debe', 'haber', 'eliminar', 'total']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['cuenta', 'debe', 'haber', 'eliminar', 'total'];"></tr>
             </table>
         </mat-card>
         <button type="button" mat-raised-button [disabled]="!asientosForm.valid" (click)="guardarAsiento()" [routerLink]="['/asientos/list']">Guardar asiento</button>
