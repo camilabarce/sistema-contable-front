@@ -12,9 +12,6 @@
                 <mat-panel-title class="th panel-title"> 
                     <div class="th">Nro. Asiento: {{ asientoGroup.id_asiento }}</div>
                 </mat-panel-title>
-                <mat-panel-description>
-                    Descripción del asiento N° {{ asientoGroup.id_asiento }}
-                </mat-panel-description>
             </mat-expansion-panel-header>
             <table class="table" mat-table [dataSource]="asientoGroup.asientos">
                 <ng-container matColumnDef="nro_asiento">
