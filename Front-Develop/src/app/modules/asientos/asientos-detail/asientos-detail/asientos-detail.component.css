@@ -1,3 +1,4 @@
+@import '../../asientos-list/asientos-list/asientos-list.component.css';
 .titulo {
     font-weight: 500;
     text-align: center;
@@ -8,7 +9,7 @@
     flex-direction: column;
     justify-content: center;
     gap: 1rem;
-    width: 50vw;
+    width: 55vw;
     margin: auto;
     margin-bottom: 4rem;
 }
@@ -18,4 +19,16 @@
 .btn {
     height: 3.4rem;
     margin: .25rem .5rem;
+}
+.mat-column-haber, .mat-column-totalHaber {
+    border-right: 1px solid black;
+}
+.mat-column-debe, .mat-column-haber, .mat-column-totalHaber, .mat-column-totalDebe{
+    text-align: right;
+}
+.cuenta-cell{
+    font-style: italic;
+}
+.table{
+    width: 70vh;
 }

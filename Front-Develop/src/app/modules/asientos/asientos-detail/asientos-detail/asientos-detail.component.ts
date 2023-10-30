@@ -37,7 +37,9 @@ export class AsientosDetailComponent implements OnInit {
   haber: number | null = null;  
   cuentasSeleccionadas: any[] = [];
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>(this.cuentasSeleccionadas);
-  total: number = 0;
+  totalDebe: number = 0;
+  totalHaber: number = 0;
+
 
   agregarCuenta() {
     if (this.cuentaSeleccionada !== null) {
@@ -49,8 +51,12 @@ export class AsientosDetailComponent implements OnInit {
         this.cuentasSeleccionadas.push({ id_cuenta: cuenta.id_cuenta, importe });
         this.cuentasDeshabilitadas.push(cuenta.id_cuenta);// Esto es para anular la cuenta elegida del mat-option
 
-        // Actualiza el total
-        this.total += importe;
+        // Actualiza el total del debe o del haber según corresponda
+        if (this.debe !== null) {
+          this.totalDebe += importe;
+        } else if (this.haber !== null) {
+          this.totalHaber += Math.abs(importe);
+        }
 
         this.cuentaSeleccionada = null;
         this.debe = null;
@@ -64,11 +70,16 @@ export class AsientosDetailComponent implements OnInit {
   eliminarCuentaDelAsiento(idCuenta: number) {
     const indiceCuenta = this.cuentasSeleccionadas.findIndex(cuenta => cuenta.id_cuenta === idCuenta);
     if (indiceCuenta !== -1) { //Es (-1) cuando no se encuentra el índice
+      const importeEliminado = this.cuentasSeleccionadas[indiceCuenta].importe;
       this.cuentasSeleccionadas.splice(indiceCuenta, 1); //Eliminamos la cuenta de la tabla
       this.dataSource.data = this.cuentasSeleccionadas; // Actualizamos las cuentas
       
-      // Recalcula el total
-      this.total = this.cuentasSeleccionadas.reduce((acc, cuenta) => acc + cuenta.importe, 0);
+      // Resta el importe eliminado del total del debe o del haber según corresponda
+      if (importeEliminado > 0) {
+        this.totalDebe -= importeEliminado;
+      } else {
+        this.totalHaber -= Math.abs(importeEliminado);
+      }
       
       //Hago lo mismo pero para que aparezcan las cuentas que han sido deshabilitadas
       const indiceCuentaDeshabilitada = this.cuentasDeshabilitadas.indexOf(idCuenta);
