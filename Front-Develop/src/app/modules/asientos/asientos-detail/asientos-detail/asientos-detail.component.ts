@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/services/api-service/api-service.service';  
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
+import swal from'sweetalert2';
 
 @Component({
   selector: 'app-asientos-detail',
@@ -13,7 +15,8 @@ export class AsientosDetailComponent implements OnInit {
   
   constructor(
     private fb: FormBuilder, 
-    private apiService: ApiService
+    private apiService: ApiService,
+    private router: Router
     ) {
       this.asientosForm = this.fb.group({
         cuentas: [0, Validators.required],
@@ -31,6 +34,7 @@ export class AsientosDetailComponent implements OnInit {
   }
   
   mostrarTabla: boolean = false;
+  mostrarBtnGuardar: boolean = false;
   cuentaSeleccionada: number | null = null;
   cuentasDeshabilitadas: number[] = [];
   debe: number | null = null;
@@ -46,6 +50,7 @@ export class AsientosDetailComponent implements OnInit {
       const cuenta = this.cuentasApi.find((cuenta) => cuenta.id_cuenta === this.cuentaSeleccionada);
       if (cuenta) {
         this.mostrarTabla = true;
+        this.mostrarBtnGuardar = true;
         // Dependiendo de si el valor se ingresó en Debe o Haber, se asigna el importe correspondiente
         const importe = (this.debe !== null) ? this.debe : ((this.haber !== null) ? -this.haber : 0);
         this.cuentasSeleccionadas.push({ id_cuenta: cuenta.id_cuenta, importe });
@@ -100,8 +105,18 @@ export class AsientosDetailComponent implements OnInit {
   }
   
   guardarAsiento() {
-    this.apiService.insertarAsiento(this.cuentasSeleccionadas).subscribe((response: any) => {
-      console.log("Asiento guardado: ", response);
-    });
+    if (this.totalDebe !== this.totalHaber) {
+      swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La suma del debe y el haber no coincide. Por favor, revisa el asiento.',
+      });
+    } else {
+      this.apiService.insertarAsiento(this.cuentasSeleccionadas).subscribe((response: any) => {
+        console.log("Asiento guardado: ", response);
+        this.router.navigate(['/asientos/list']);
+      });
+    }
   }
+  
 }

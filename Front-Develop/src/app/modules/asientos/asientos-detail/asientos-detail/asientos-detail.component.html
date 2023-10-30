@@ -65,6 +65,6 @@
                     <tr mat-row *matRowDef="let row; columns: ['cuenta', 'debe', 'haber', 'totalDebe', 'totalHaber', 'eliminar'];"></tr>
                 </table>
             </mat-card>
-        <button type="button" mat-raised-button color="primary" [disabled]="!asientosForm.valid" (click)="guardarAsiento()" [routerLink]="['/asientos/list']">Guardar asiento</button>
+        <button type="button" mat-raised-button color="primary" [disabled]="!asientosForm.valid" *ngIf="mostrarBtnGuardar" (click)="guardarAsiento()">Guardar asiento</button>
     </form>    
 </mat-card>
