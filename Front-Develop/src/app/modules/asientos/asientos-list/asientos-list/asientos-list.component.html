@@ -15,32 +15,41 @@
             </mat-expansion-panel-header>
             <table class="table" mat-table [dataSource]="asientoGroup.asientos">
                 <ng-container matColumnDef="nro_asiento">
-                    <th class="th" mat-header-cell *matHeaderCellDef>Nro. Asiento</th>
-                    <td mat-cell *matCellDef="let row">{{row.id_asiento}}</td>
+                    <th class="th header" mat-header-cell *matHeaderCellDef>Nro. Asiento</th>
+                    <td mat-cell *matCellDef="let row">{{row.id_asiento}}</td>    
+                    <td class="th footer" mat-footer-cell *matFooterCellDef> Total </td>           
                 </ng-container>
                 <ng-container matColumnDef="fecha">
-                    <th class="th" mat-header-cell *matHeaderCellDef>Fecha</th>
+                    <th class="th header" mat-header-cell *matHeaderCellDef>Fecha</th>
                     <td mat-cell *matCellDef="let e">{{e.fecha_asiento}}</td>
+                    <td class="footer" mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
                 <ng-container matColumnDef="codigo">
-                    <th class="th" mat-header-cell *matHeaderCellDef>Código</th>
+                    <th class="th header" mat-header-cell *matHeaderCellDef>Código</th>
                     <td mat-cell *matCellDef="let e">{{e.codigo}}</td>
+                    <td class="footer" mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
                 <ng-container matColumnDef="cuenta">
-                    <th class="th" mat-header-cell *matHeaderCellDef>Cuenta</th>
+                    <th class="th header" mat-header-cell *matHeaderCellDef>Cuenta</th>
                     <td mat-cell *matCellDef="let e" class="capitalize">{{e.cuenta}}</td>
+                    <td class="footer" mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
                 <ng-container matColumnDef="debe">
-                    <th class="th" mat-header-cell *matHeaderCellDef>Debe</th>
+                    <th class="th header" mat-header-cell *matHeaderCellDef>Debe</th>
                     <td mat-cell *matCellDef="let e">{{e.importe >= 0 ? e.importe : ''}}</td>
+                    <td class="th footer" mat-footer-cell *matFooterCellDef> {{ calcularTotalDebe(asientoGroup.asientos) }} </td>
                 </ng-container>
                 <ng-container matColumnDef="haber">
-                    <th class="th" mat-header-cell *matHeaderCellDef>Haber</th>
+                    <th class="th header" mat-header-cell *matHeaderCellDef>Haber</th>
                     <td mat-cell *matCellDef="let e">{{e.importe < 0 ? (-1) * e.importe : ''}}</td>
+                    <td class="th footer" mat-footer-cell *matFooterCellDef> {{ calcularTotalHaber(asientoGroup.asientos) }} </td>
                 </ng-container>
+               
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let asiento; columns: displayedColumns;"></tr>
-            </table>
+                <tr mat-footer-row *matFooterRowDef="displayedColumns" color="primary"></tr>
+
+            </table>                
         </mat-expansion-panel>
     </mat-accordion>
 </mat-card>

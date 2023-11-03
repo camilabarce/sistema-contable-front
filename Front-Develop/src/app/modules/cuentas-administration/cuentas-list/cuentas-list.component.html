@@ -19,16 +19,17 @@
         <!-- rubro -->
         <mat-form-field class="campos">
             <mat-label>Selecciona un rubro</mat-label>
-            <mat-select [(ngModel)]="rubroSeleccionado">
+            <mat-select [(ngModel)]="rubroSeleccionado" (ngModelChange)="mostrarCuentas()">
                 <mat-option *ngFor="let rubro of rubrosFiltrados" [value]="rubro.id_rubro">{{ rubro.nombre_rubro }}</mat-option>
             </mat-select>
         </mat-form-field>
-        <button mat-button class="campos btn" (click)="mostrarCuentas()">
+        <!-- Comenté este botón para conservarlo en caso de que prefieran mostrar cuentas por medio del botón en lugar de por medio del menú -->
+        <!-- <button mat-button class="campos btn" (click)="mostrarCuentas()">
             <mat-icon class="icono">pageview</mat-icon>
             Mostrar cuentas
-        </button>
+        </button> -->
 
-        <!-- Se activan al presionar "Mostrar cuentas" -->
+        <!-- Se activan al mostrar cuentas -->
         <button mat-button class="campos btn" (click)="agregarCuenta()" *ngIf="mostrarBotonAgregar">
             <mat-icon class="icono">library_add</mat-icon>
             Agregar cuenta

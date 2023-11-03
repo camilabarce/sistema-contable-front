@@ -66,7 +66,7 @@ rubrosFiltrados: any[] = [];
   cuentasData: any[] = [];
   mostrarBotonAgregar: boolean = false;
   mostrarBotonPdf: boolean = false;
-
+  
   mostrarCuentas() {
       if (this.grupoSeleccionado !== null && this.bloqueSeleccionado !== null && this.rubroSeleccionado !== null) {       
             this.apiService.mostrarCuentas(this.grupoSeleccionado, this.bloqueSeleccionado, this.rubroSeleccionado).subscribe((data) => {

@@ -26,3 +26,14 @@
 .mat-accordion-asientos{
     box-shadow: 0 4px 10px -4px black;
 }
+.header{
+    background-color:  rgba(0, 0, 0, 0.787) !important;
+    color: rgb(230, 218, 195);
+}
+.footer{
+    font-family: Roboto, sans-serif;
+    letter-spacing: .0125em;
+    font-size: 0.97rem;
+    color: rgb(230, 218, 195);
+    background-color: #673ab7;
+}

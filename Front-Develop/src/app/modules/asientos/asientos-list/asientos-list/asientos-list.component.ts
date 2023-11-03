@@ -43,8 +43,31 @@ export class AsientosListComponent implements OnInit {
     });
     return asientosAgrupados;
   }
+
+  calcularTotalDebe(asientos: any[]) {
+    let totalDebe = 0;
+    for (const asiento of asientos) {
+      if (asiento.importe >= 0) {
+        totalDebe += asiento.importe;
+      }
+    }
+    return totalDebe;
+  }
+  
+  calcularTotalHaber(asientos: any[]) {
+    let totalHaber = 0;
+    for (const asiento of asientos) {
+      if (asiento.importe < 0) {
+        totalHaber -= asiento.importe; 
+      }
+    }
+    return totalHaber;
+  }
+  
+  
 }
 interface AsientoGroup {
   id_asiento: number;
   asientos: any[]; // any[] representa los detalles de los asientos en el grupo
 }
+
