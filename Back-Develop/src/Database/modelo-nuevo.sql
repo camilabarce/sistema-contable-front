@@ -2,10 +2,10 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 20-10-2023 a las 19:26:45
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 09-11-2023 a las 04:28:53
 -- Versión del servidor: 8.0.31
--- Versión de PHP: 8.0.26
+-- Versión de PHP: 8.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -25,7 +25,6 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-DROP PROCEDURE IF EXISTS `agregarCuenta`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `agregarCuenta` (IN `grupoOption` INT(30), IN `bloqueOption` INT(30), IN `rubroOption` INT(30), IN `nuevaCuenta` VARCHAR(50))   BEGIN
 
 DECLARE ultimoIdCuenta INT;
@@ -51,7 +50,6 @@ VALUES (
 
 END$$
 
-DROP PROCEDURE IF EXISTS `borrarCuenta`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `borrarCuenta` (IN `codigoCuenta` VARCHAR(9))   BEGIN
 	
 	UPDATE grupo g, bloque b, rubro r, cuentas c, tipo_cuentas tc
@@ -64,7 +62,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `borrarCuenta` (IN `codigoCuenta` VA
 	
 END$$
 
-DROP PROCEDURE IF EXISTS `insertarAsiento`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarAsiento` (IN `jsonCuentasAsientos` JSON)   BEGIN
     DECLARE nuevoIdAsiento INT;
     DECLARE numerosJSON JSON;
@@ -94,29 +91,36 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarAsiento` (IN `jsonCuentasAs
         SET cuentaValue = JSON_UNQUOTE(JSON_EXTRACT(numerosJSON, '$[0].id_cuenta'));
         SET importe = JSON_UNQUOTE(JSON_EXTRACT(numerosJSON, '$[0].importe'));
     END WHILE;
+    
+    /*Limpio los saldos por cada asiento agregado para evitar superposición*/
+    UPDATE cuentas AS C
+    SET C.saldo_cuenta = 0;
+
+    /*Actualizo los saldos sumando los importes del asiento correspondiente*/
+    UPDATE cuentas AS C
+    SET C.saldo_cuenta = (SELECT SUM(AC.importe) 
+                 FROM asiento_cuenta AS AC
+                 WHERE AC.id_cuenta = C.id_cuenta
+    );
 END$$
 
-DROP PROCEDURE IF EXISTS `llenarSelectAsientos`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `llenarSelectAsientos` ()   SELECT C.id_cuenta, C.nombre_cuenta as 'nombre' 
 FROM cuentas C
 WHERE C.mostrarCuenta = 1
 ORDER BY C.nombre_cuenta$$
 
-DROP PROCEDURE IF EXISTS `modificarCuenta`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `modificarCuenta` (IN `nuevoNombre` VARCHAR(50), IN `codigoCuenta` VARCHAR(50), IN `nombreActual` VARCHAR(50))   UPDATE grupo G, bloque B, rubro R, cuentas C, tipo_cuentas TC
 SET C.nombre_cuenta = nuevoNombre
 WHERE CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta) = codigoCuenta
 AND C.nombre_cuenta = nombreActual
 AND (TC.id_grupo = G.id_grupo AND TC.id_bloque = B.id_bloque AND TC.id_rubro = R.id_rubro AND TC.id_cuenta = C.id_cuenta)$$
 
-DROP PROCEDURE IF EXISTS `mostrarAsiento`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarAsiento` ()   SELECT A.id_asiento,  DATE_FORMAT(A.fecha, '%Y-%m-%d') as 'fecha_asiento', CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta)  AS 'codigo', C.nombre_cuenta as 'cuenta', AC.importe 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarAsiento` ()   SELECT A.id_asiento,  DATE_FORMAT(A.fecha, '%Y-%m-%d') as 'fecha_asiento', CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta)  AS 'codigo', C.nombre_cuenta as 'cuenta', AC.importe
 FROM grupo G, bloque B, rubro R, cuentas C, tipo_cuentas TC, asiento A, asiento_cuenta AC
 WHERE A.id_asiento = AC.id_asiento 
 AND C.id_cuenta = AC.id_cuenta
 AND G.id_grupo = TC.id_grupo AND B.id_bloque = TC.id_bloque AND R.id_rubro = TC.id_rubro AND C.id_cuenta = TC.id_cuenta$$
 
-DROP PROCEDURE IF EXISTS `mostrarCuentas`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarCuentas` (IN `grupoOption` INT(11), IN `bloqueOption` INT(11), IN `rubroOption` INT(11))   select CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta) AS 'codigo',
        CONCAT(UPPER(SUBSTRING(C.nombre_cuenta, 1, 1)), LOWER(SUBSTRING(C.nombre_cuenta, 2))) AS 'nombre',
        CONCAT(UPPER(SUBSTRING(CONCAT(G.nombre_grupo, ' ', B.nombre_bloque), 1, 1)), LOWER(SUBSTRING(CONCAT(G.nombre_grupo, ' ', B.nombre_bloque), 2))) AS 'tipo', C.saldo_cuenta AS 'saldo'
@@ -133,11 +137,9 @@ DELIMITER ;
 -- Estructura de tabla para la tabla `asiento`
 --
 
-DROP TABLE IF EXISTS `asiento`;
-CREATE TABLE IF NOT EXISTS `asiento` (
+CREATE TABLE `asiento` (
   `id_asiento` int NOT NULL,
-  `fecha` date NOT NULL,
-  PRIMARY KEY (`id_asiento`)
+  `fecha` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -146,13 +148,10 @@ CREATE TABLE IF NOT EXISTS `asiento` (
 -- Estructura de tabla para la tabla `asiento_cuenta`
 --
 
-DROP TABLE IF EXISTS `asiento_cuenta`;
-CREATE TABLE IF NOT EXISTS `asiento_cuenta` (
+CREATE TABLE `asiento_cuenta` (
   `id_asiento` int NOT NULL,
   `id_cuenta` int NOT NULL,
-  `importe` decimal(10,2) NOT NULL,
-  KEY `id_asiento` (`id_asiento`,`id_cuenta`),
-  KEY `id_cuenta` (`id_cuenta`)
+  `importe` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -161,12 +160,10 @@ CREATE TABLE IF NOT EXISTS `asiento_cuenta` (
 -- Estructura de tabla para la tabla `bloque`
 --
 
-DROP TABLE IF EXISTS `bloque`;
-CREATE TABLE IF NOT EXISTS `bloque` (
+CREATE TABLE `bloque` (
   `id_bloque` int NOT NULL DEFAULT '0',
   `nombre_bloque` varchar(50) NOT NULL,
-  `cod_bloque` varchar(2) NOT NULL,
-  PRIMARY KEY (`id_bloque`)
+  `cod_bloque` varchar(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -186,14 +183,12 @@ INSERT INTO `bloque` (`id_bloque`, `nombre_bloque`, `cod_bloque`) VALUES
 -- Estructura de tabla para la tabla `cuentas`
 --
 
-DROP TABLE IF EXISTS `cuentas`;
-CREATE TABLE IF NOT EXISTS `cuentas` (
+CREATE TABLE `cuentas` (
   `id_cuenta` int NOT NULL,
   `nombre_cuenta` varchar(50) NOT NULL,
   `cod_cuenta` varchar(3) NOT NULL,
   `saldo_cuenta` decimal(10,2) NOT NULL,
-  `mostrarCuenta` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id_cuenta`)
+  `mostrarCuenta` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -201,7 +196,7 @@ CREATE TABLE IF NOT EXISTS `cuentas` (
 --
 
 INSERT INTO `cuentas` (`id_cuenta`, `nombre_cuenta`, `cod_cuenta`, `saldo_cuenta`, `mostrarCuenta`) VALUES
-(1, 'caja', '001', '0.00', 1),
+(1, 'Caja', '001', '0.00', 1),
 (2, 'banco Galicia c/c', '002', '0.00', 1),
 (3, 'valores a depositar', '003', '0.00', 1),
 (4, 'moneda extranjera', '004', '0.00', 1),
@@ -366,12 +361,10 @@ INSERT INTO `cuentas` (`id_cuenta`, `nombre_cuenta`, `cod_cuenta`, `saldo_cuenta
 -- Estructura de tabla para la tabla `grupo`
 --
 
-DROP TABLE IF EXISTS `grupo`;
-CREATE TABLE IF NOT EXISTS `grupo` (
+CREATE TABLE `grupo` (
   `id_grupo` int NOT NULL,
   `nombre_grupo` varchar(50) NOT NULL,
-  `cod_grupo` varchar(2) NOT NULL,
-  PRIMARY KEY (`id_grupo`)
+  `cod_grupo` varchar(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -390,12 +383,10 @@ INSERT INTO `grupo` (`id_grupo`, `nombre_grupo`, `cod_grupo`) VALUES
 -- Estructura de tabla para la tabla `rubro`
 --
 
-DROP TABLE IF EXISTS `rubro`;
-CREATE TABLE IF NOT EXISTS `rubro` (
+CREATE TABLE `rubro` (
   `id_rubro` int NOT NULL,
   `nombre_rubro` varchar(50) NOT NULL,
-  `cod_rubro` varchar(2) NOT NULL,
-  PRIMARY KEY (`id_rubro`)
+  `cod_rubro` varchar(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -448,16 +439,11 @@ INSERT INTO `rubro` (`id_rubro`, `nombre_rubro`, `cod_rubro`) VALUES
 -- Estructura de tabla para la tabla `tipo_cuentas`
 --
 
-DROP TABLE IF EXISTS `tipo_cuentas`;
-CREATE TABLE IF NOT EXISTS `tipo_cuentas` (
+CREATE TABLE `tipo_cuentas` (
   `id_grupo` int NOT NULL,
   `id_bloque` int NOT NULL,
   `id_rubro` int NOT NULL,
-  `id_cuenta` int NOT NULL,
-  KEY `id_grupo` (`id_grupo`),
-  KEY `id_bloque` (`id_bloque`),
-  KEY `id_rubro` (`id_rubro`),
-  KEY `id_cuenta` (`id_cuenta`)
+  `id_cuenta` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -623,6 +609,56 @@ INSERT INTO `tipo_cuentas` (`id_grupo`, `id_bloque`, `id_rubro`, `id_cuenta`) VA
 (4, 3, 37, 156),
 (4, 4, 38, 157),
 (4, 4, 38, 158);
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `asiento`
+--
+ALTER TABLE `asiento`
+  ADD PRIMARY KEY (`id_asiento`);
+
+--
+-- Indices de la tabla `asiento_cuenta`
+--
+ALTER TABLE `asiento_cuenta`
+  ADD KEY `id_asiento` (`id_asiento`,`id_cuenta`),
+  ADD KEY `id_cuenta` (`id_cuenta`);
+
+--
+-- Indices de la tabla `bloque`
+--
+ALTER TABLE `bloque`
+  ADD PRIMARY KEY (`id_bloque`);
+
+--
+-- Indices de la tabla `cuentas`
+--
+ALTER TABLE `cuentas`
+  ADD PRIMARY KEY (`id_cuenta`);
+
+--
+-- Indices de la tabla `grupo`
+--
+ALTER TABLE `grupo`
+  ADD PRIMARY KEY (`id_grupo`);
+
+--
+-- Indices de la tabla `rubro`
+--
+ALTER TABLE `rubro`
+  ADD PRIMARY KEY (`id_rubro`);
+
+--
+-- Indices de la tabla `tipo_cuentas`
+--
+ALTER TABLE `tipo_cuentas`
+  ADD KEY `id_grupo` (`id_grupo`),
+  ADD KEY `id_bloque` (`id_bloque`),
+  ADD KEY `id_rubro` (`id_rubro`),
+  ADD KEY `id_cuenta` (`id_cuenta`);
 
 --
 -- Restricciones para tablas volcadas
