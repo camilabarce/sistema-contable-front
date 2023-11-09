@@ -57,8 +57,20 @@
       text-shadow: 2px 2px 4px rgb(12, 12, 12);
       letter-spacing: 8px;
     }
-  }
+}
 
+.btnApi{
+    font-size: 1.3rem;
+    background-color: rgb(48, 38, 38);
+    color: rgb(248, 247, 246);
+    margin-top: 8%;
+    margin-left: 34%;
+    padding: 25px;
+}
+
+.btnApi:hover{
+    border: 2px solid gold;
+}
 
 
 

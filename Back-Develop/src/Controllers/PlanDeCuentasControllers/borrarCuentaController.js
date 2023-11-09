@@ -11,7 +11,7 @@ const borrarCuenta = (req, res) => {
             return;
         }
 
-        res.status(204); //Código 204 ("No Content") indica que la solicitud se ha procesado correctamente y que no hay contenido en la respuesta.
+        res.status(204).end(); //Código 204 ("No Content") indica que la solicitud se ha procesado correctamente y que no hay contenido en la respuesta.
       });
       
   };

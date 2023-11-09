@@ -11,7 +11,7 @@ const agregarCuenta = (req, res) => {
         return;
       }
       
-      res.status(201).json(cuenta); //Código 201 ("Created") indica la creación de un recurso en la API
+      res.status(201).json({ mensaje: "Cuenta agregada con éxito" }); //Código 201 ("Created") indica la creación de un recurso en la API
     });
 };
   
