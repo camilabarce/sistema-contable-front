@@ -74,7 +74,7 @@
                 <a [routerLink]="['/cuentas/detail']" [queryParams]="{ nombreActual: element.nombre, codigoCuenta: element.codigo }">
                     <button class="btn1" mat-raised-button color="primary">Editar</button>
                 </a>                
-                <button class="btn1" mat-raised-button color="warn" (click)="borrarCuenta(element.codigo, element.nombre)">Eliminar</button>
+                <button class="btn1" mat-raised-button color="warn" (click)="borrarCuenta(element.codigo, element.nombre, element.saldo)">Eliminar</button>
             </td>
         </ng-container>
 

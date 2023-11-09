@@ -106,24 +106,40 @@ rubrosFiltrados: any[] = [];
     this.mostrarCampoNuevaCuenta = false;
   }
 
-  borrarCuenta(codigoCuenta: string, nombreCuenta: string) {
-    swal.fire({
-      title: '¿Estás seguro?',
-      text: '¿Estás seguro de que deseas eliminar "' + nombreCuenta + '"?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.apiService.borrarCuenta(codigoCuenta).subscribe((resultado) => {
-          console.log("Código eliminado: ", resultado);
-          this.mostrarCuentas();
-          swal.fire('Eliminación exitosa', 'La cuenta se ha eliminado con éxito.', 'success');
-        });
-      }
-    });
+  borrarCuenta(codigoCuenta: string, nombreCuenta: string, saldo: number) {
+    if (saldo > 0) {
+      swal.fire({
+        title: 'Saldo detectado',
+        html: 'La cuenta "<strong>' + nombreCuenta + '</strong>" tiene <span style=color:red;>$' + saldo + '</span><br><br> No se pueden eliminar cuentas con saldo',
+        icon: 'error'
+      });
+    }
+    else if (saldo < 0) {
+      swal.fire({
+        title: 'Deuda detectada',
+        html: 'La cuenta "<strong>' + nombreCuenta + '</strong>" tiene una deuda de <span style=color:red;>$' + Math.abs(saldo) + '</span> y no se puede eliminar',
+        icon: 'error'
+      });
+    } else {
+      swal.fire({
+        title: '¿Estás seguro?',
+        html: '¿Estás seguro de que deseas eliminar "<strong>' + nombreCuenta + '</strong>"?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.apiService.borrarCuenta(codigoCuenta).subscribe((resultado) => {
+            console.log("Código eliminado: ", resultado);
+            this.mostrarCuentas();
+            swal.fire('Eliminación exitosa', 'La cuenta se ha eliminado con éxito.', 'success');
+          });
+        }
+      });
+    }
   }
+  
   
 dataSource = this.cuentasData;
 displayedColumns = ['nombre', 'codigo', 'saldo', 'acciones'];
