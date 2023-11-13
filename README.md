@@ -1,37 +1,41 @@
-# Ejemplo de consumo de API a través de Angular usando el módulo *HttpClient* para realizar una solicitud *HTTP GET*
+# Ejemplo de uso de Sistema Contable API Documentation
 
 ---
 
-# IMPORTANTE 
+# NOCIONES 
 
-* En este caso se usó '/optionsGrupoBloque' solo de ilustración para las imágenes.
-* Dicha URL ya no existe porque se reemplazó su uso por el JSON estático.
-* Las rutas a utilizar están al final del documento.
+* Se ha aplicado el módulo swagger-ui-express que nos permite generar una interfaz gráfica para documentar nuestra API (ver documentación en: https://swagger.io/docs/)
 
+* Es útil para tener presentables las rutas a utilizar cómo también saber que respuesta esperar de las peticiones o que información se requiere pasar como argumento.
+  
 ---
 
 <br>
 
-Configuración del servicio que maneja la ruta /optionsGrupoBloque proveniente de la carpeta Back-Develop
+Ingresamos a http://localhost:3000 y damos click en botón **"Ver Documentación de la API'"**
   
 ![](https://github.com/camilabarce/sistema-contable/blob/develop/Back-Develop/Ignorar/1.png)
 
 <br>
 
-Componente que consume el servicio
+Veremos 2 listas desplegables pertenecientes a cada área de nuestro proyecto que contienen sus rutas correspondientes
   
 ![](https://github.com/camilabarce/sistema-contable/blob/develop/Back-Develop/Ignorar/2.png)
 
-
-<br>
-
-Rutas a utilizar (Pueden corroborar si están correctas en 'Back-Develop/src/app.js')
-  
 ![](https://github.com/camilabarce/sistema-contable/blob/develop/Back-Develop/Ignorar/3.png)
 
 <br>
 
-Ejemplo de la información que traerá ***/mostrarCuentas/ 1/ 1/ 1***
+Para testear, simplemente presionamos en **Try it out**
 
 ![](https://github.com/camilabarce/sistema-contable/blob/develop/Back-Develop/Ignorar/4.png)
 
+Cargamos parámetros (En caso de que los requiera) y damos en **Execute**
+
+![](https://github.com/camilabarce/sistema-contable/blob/develop/Back-Develop/Ignorar/5.png)
+
+<br>
+
+Y obtenemos la respuesta correspondiente
+
+![](https://github.com/camilabarce/sistema-contable/blob/develop/Back-Develop/Ignorar/6.png)
