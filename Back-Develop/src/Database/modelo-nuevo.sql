@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 09-11-2023 a las 04:28:53
+-- Tiempo de generación: 14-11-2023 a las 02:24:49
 -- Versión del servidor: 8.0.31
 -- Versión de PHP: 8.1.6
 
@@ -128,6 +128,84 @@ FROM grupo G, bloque B, rubro R, cuentas C, tipo_cuentas TC
 where (G.id_grupo = TC.id_grupo and B.id_bloque = TC.id_bloque and R.id_rubro = TC.id_rubro and C.id_cuenta = TC.id_cuenta)
 AND (TC.id_grupo = grupoOption and TC.id_bloque = bloqueOption and TC.id_rubro = rubroOption)
 AND C.mostrarCuenta = 1$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `situacionPatrimonial` ()   BEGIN
+	
+    /*Activos corrientes*/
+   SELECT JSON_ARRAYAGG(
+    JSON_OBJECT('rubro', nombre_rubro, 'saldo', saldo)
+) AS activos_corrientes
+FROM (
+    SELECT R.nombre_rubro, SUM(C.saldo_cuenta) as saldo
+    FROM tipo_cuentas TC
+    INNER JOIN cuentas C ON C.id_cuenta = TC.id_cuenta
+    INNER JOIN rubro R ON R.id_rubro = TC.id_rubro
+    INNER JOIN grupo G ON G.id_grupo = TC.id_grupo
+    INNER JOIN bloque B ON B.id_bloque = TC.id_bloque
+    WHERE CONCAT(G.cod_grupo, B.cod_bloque) = '11'
+    GROUP BY R.nombre_rubro
+) AS subconsulta;
+
+
+       /*Activos No corrientes*/
+     SELECT JSON_ARRAYAGG(
+    JSON_OBJECT('rubro', nombre_rubro, 'saldo', saldo)
+) AS activos_no_corrientes
+FROM (
+    SELECT R.nombre_rubro, SUM(C.saldo_cuenta) as saldo
+    FROM tipo_cuentas TC
+    INNER JOIN cuentas C ON C.id_cuenta = TC.id_cuenta
+    INNER JOIN rubro R ON R.id_rubro = TC.id_rubro
+    INNER JOIN grupo G ON G.id_grupo = TC.id_grupo
+    INNER JOIN bloque B ON B.id_bloque = TC.id_bloque
+    WHERE CONCAT(G.cod_grupo, B.cod_bloque) = '12'
+    GROUP BY R.nombre_rubro
+) AS subconsulta;
+   
+    /*Pasivos corrientes*/
+     SELECT JSON_ARRAYAGG(JSON_OBJECT('rubro', nombre_rubro, 'saldo', saldo)) AS pasivos_corrientes
+FROM (
+    SELECT R.nombre_rubro, SUM(C.saldo_cuenta) as saldo
+    FROM tipo_cuentas TC
+    INNER JOIN cuentas C ON C.id_cuenta = TC.id_cuenta
+    INNER JOIN rubro R ON R.id_rubro = TC.id_rubro
+    INNER JOIN grupo G ON G.id_grupo = TC.id_grupo
+    INNER JOIN bloque B ON B.id_bloque = TC.id_bloque
+    WHERE CONCAT(G.cod_grupo, B.cod_bloque) = '21'
+    GROUP BY R.nombre_rubro
+) AS subconsulta;
+	 
+   SELECT JSON_ARRAYAGG(JSON_OBJECT('rubro', nombre_rubro, 'saldo', saldo)) AS pasivos_no_corrientes
+FROM (
+    SELECT R.nombre_rubro, SUM(C.saldo_cuenta) as saldo
+    FROM tipo_cuentas TC
+    INNER JOIN cuentas C ON C.id_cuenta = TC.id_cuenta
+    INNER JOIN rubro R ON R.id_rubro = TC.id_rubro
+    INNER JOIN grupo G ON G.id_grupo = TC.id_grupo
+    INNER JOIN bloque B ON B.id_bloque = TC.id_bloque
+    WHERE CONCAT(G.cod_grupo, B.cod_bloque) = '22'
+    GROUP BY R.nombre_rubro
+) AS subconsulta;
+
+/*Total del Activo y del Pasivo*/
+SELECT  JSON_OBJECT('activo', SUM(C.saldo_cuenta)) AS total
+FROM tipo_cuentas TC
+INNER JOIN cuentas C ON C.id_cuenta = TC.id_cuenta
+INNER JOIN rubro R ON R.id_rubro = TC.id_rubro
+INNER JOIN grupo G ON G.id_grupo = TC.id_grupo
+INNER JOIN bloque B ON B.id_bloque = TC.id_bloque
+WHERE G.cod_grupo = '1'
+UNION
+    SELECT  JSON_OBJECT('pasivo', SUM(C.saldo_cuenta)) AS total
+FROM tipo_cuentas TC
+INNER JOIN cuentas C ON C.id_cuenta = TC.id_cuenta
+INNER JOIN rubro R ON R.id_rubro = TC.id_rubro
+INNER JOIN grupo G ON G.id_grupo = TC.id_grupo
+INNER JOIN bloque B ON B.id_bloque = TC.id_bloque
+WHERE G.cod_grupo = '2';
+
+
+END$$
 
 DELIMITER ;
 
@@ -353,7 +431,8 @@ INSERT INTO `cuentas` (`id_cuenta`, `nombre_cuenta`, `cod_cuenta`, `saldo_cuenta
 (155, 'impuesto a operaciones ordinarias', '001', '0.00', 1),
 (156, 'impuesto neto a las ganancias', '001', '0.00', 1),
 (157, 'robo', '001', '0.00', 1),
-(158, 'incendio', '002', '0.00', 1);
+(158, 'incendio', '002', '0.00', 1),
+(159, 'NuevaSwagger', '007', '0.00', 0);
 
 -- --------------------------------------------------------
 
@@ -608,7 +687,8 @@ INSERT INTO `tipo_cuentas` (`id_grupo`, `id_bloque`, `id_rubro`, `id_cuenta`) VA
 (4, 3, 36, 155),
 (4, 3, 37, 156),
 (4, 4, 38, 157),
-(4, 4, 38, 158);
+(4, 4, 38, 158),
+(1, 1, 1, 159);
 
 --
 -- Índices para tablas volcadas
