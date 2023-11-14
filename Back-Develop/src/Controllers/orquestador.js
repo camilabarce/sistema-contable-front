@@ -1,4 +1,6 @@
 // Importamos los controladores
+
+//Controlador para setear la ruta principal de nuestro server
 const inicio = require('./inicioAplicacion');
 
 //Controladores para el plan de cuentas
@@ -12,6 +14,9 @@ const mostrarAsientos = require('./LibroDiarioControllers/mostrarAsientosControl
 const cuentasSelectAsiento = require('./LibroDiarioControllers/llenarSelectAsientosController');
 const insertarAsiento = require('./LibroDiarioControllers/insertarAsientoController');
 
+//Controladores para la tabla de Estados
+const situacionPatrimonial = require('./Estados/situacionPatrimonialController');
+
 // Controlador general (orquestador)
 const orquestador = {
   inicio,
@@ -21,7 +26,8 @@ const orquestador = {
   borrarCuenta,
   mostrarAsientos,
   cuentasSelectAsiento,
-  insertarAsiento
+  insertarAsiento,
+  situacionPatrimonial
 };
 
 // El 'orquestador' es un mediador entre los controladores y nuestro 'app.js'.

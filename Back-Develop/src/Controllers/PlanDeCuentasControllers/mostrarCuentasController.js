@@ -17,7 +17,6 @@ const mostrarCuentas = (req, res) => {
         });
 
         res.status(200).json(cuentas); //Enviamos el status + las cuentas como respuesta en formato JSON
-
       });
   };
   

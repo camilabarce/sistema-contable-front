@@ -15,7 +15,10 @@ router
     //Rutas para el libro diario.
     .get('/mostrarAsientos', orquestador.mostrarAsientos)
     .get('/llenarSelectAsientos', orquestador.cuentasSelectAsiento)
-    .post('/insertarAsiento', orquestador.insertarAsiento);
+    .post('/insertarAsiento', orquestador.insertarAsiento)
+
+    //Ruta para estado patrimonial
+    .get('/situacionPatrimonial', orquestador.situacionPatrimonial);
 
 module.exports = router;
 
@@ -31,7 +34,7 @@ module.exports = router;
  *   get:
  *     tags:
  *       - Plan de Cuentas
- *     description: "Muestra las cuentas según la combinación de los ID´s" 
+ *     description: <strong>DESCRIPCIÓN:</strong> "Muestra las cuentas según la combinación de los ID´s"
  *     parameters:
  *       - in: path
  *         name: grupoOption
@@ -50,7 +53,7 @@ module.exports = router;
  *         description: ID del Rubro
  *     responses:
  *       200:
- *         description: OK
+ *         description: <strong>OK</strong>
  *         content:
  *           application/json:
  *             schema:
@@ -61,7 +64,7 @@ module.exports = router;
  *                 tipo: "Activo corriente"
  *                 saldo: 0
  *       500:
- *         description: Internal Server Error
+ *         description: <strong>Internal Server Error</strong>
  *         content:
  *           application/json:
  *             schema:
@@ -78,7 +81,7 @@ module.exports = router;
  *   get:
  *     tags:
  *       - Plan de Cuentas
- *     description: "Cambia el nombre de una cuenta"
+ *     description: <strong>DESCRIPCIÓN:</strong> "Cambia el nombre de una cuenta"
  *     parameters:
  *       - in: path
  *         name: nuevoNombre
@@ -97,7 +100,7 @@ module.exports = router;
  *         description: Nombre actual de la cuenta
  *     responses:
  *       200:
- *         description: OK
+ *         description: <strong>OK</strong>
  *         content:
  *           application/json:
  *             schema:
@@ -107,7 +110,7 @@ module.exports = router;
  *                   type: string
  *                   example: "Cuenta modificada con éxito." 
  *       500:
- *         description: Internal Server Error
+ *         description: <strong>Internal Server Error</strong>
  *         content:
  *           application/json:
  *             schema:
@@ -124,7 +127,7 @@ module.exports = router;
  *   post:
  *     tags:
  *       - Plan de Cuentas
- *     description: "Agrega una cuenta dependiendo de la combinación de los ID´s"
+ *     description: <strong>DESCRIPCIÓN:</strong> "Agrega una cuenta dependiendo de la combinación de los ID´s"
  *     parameters:
  *       - in: path
  *         name: grupoOption
@@ -148,7 +151,7 @@ module.exports = router;
  *         description: Nombre de la cuenta a agregar 
  *     responses:
  *       201:
- *         description: CREATED
+ *         description: <strong>CREATED</strong>
  *         content:
  *           application/json:
  *             schema:
@@ -158,7 +161,7 @@ module.exports = router;
  *                   type: string
  *                   example: "Cuenta agregada con éxito." 
  *       500:
- *         description: Internal Server Error
+ *         description: <strong>Internal Server Error</strong>
  *         content:
  *           application/json:
  *             schema:
@@ -175,6 +178,7 @@ module.exports = router;
  *   delete:
  *     tags:
  *       - Plan de Cuentas
+ *     description: <strong>DESCRIPCIÓN:</strong> "Borra una cuenta del plan de cuentas"
  *     parameters:
  *       - in: path
  *         name: codigoCuenta
@@ -183,9 +187,9 @@ module.exports = router;
  *         description: Código de la cuenta
  *     responses:
  *       204:
- *         description: NO CONTENT
+ *         description: <strong>NO CONTENT</strong>
  *       500:
- *         description: Internal Server Error
+ *         description: <strong>Internal Server Error</strong>
  *         content:
  *           application/json:
  *             schema:
@@ -206,10 +210,10 @@ module.exports = router;
  *   get:
  *     tags:
  *       - Libro Diario
- *     description: "Muestra los datos del asiento tales como: N°Asiento | Fecha | Código de cuenta | Nombre de Cuenta | Importe"
+ *     description: <strong>DESCRIPCIÓN:</strong> "Muestra los datos del asiento tales como: N°Asiento | Fecha | Código de cuenta | Nombre de Cuenta | Importe"
  *     responses:
  *       200:
- *         description: OK
+ *         description: <strong>OK</strong>
  *         content:
  *           application/json:
  *             schema:
@@ -221,7 +225,7 @@ module.exports = router;
  *                 cuenta: "Caja"
  *                 importe: 10000
  *       500:
- *         description: Internal Server Error
+ *         description: <strong>Internal Server Error</strong>
  *         content:
  *           application/json:
  *             schema:
@@ -238,10 +242,10 @@ module.exports = router;
  *   get:
  *     tags:
  *       - Libro Diario
- *     description: "Trae todos los ID´s y Nombres de las cuentas"
+ *     description: <strong>DESCRIPCIÓN:</strong> "Trae todos los ID´s y Nombres de las cuentas"
  *     responses:
  *       200:
- *         description: OK
+ *         description: <strong>OK</strong>
  *         content:
  *           application/json:
  *             schema:
@@ -252,7 +256,7 @@ module.exports = router;
  *               - id_cuenta: 3
  *                 nombre: "Valores a depositar"
  *       500:
- *         description: Internal Server Error
+ *         description: <strong>Internal Server Error</strong>
  *         content:
  *           application/json:
  *             schema:
@@ -269,9 +273,9 @@ module.exports = router;
  *   post:
  *     tags:
  *       - Libro Diario
- *     description: "Crea un nuevo asiento en el Libro Diario"
+ *     description: <strong>DESCRIPCIÓN:</strong> "Crea un nuevo asiento en el Libro Diario"
  *     requestBody:
- *       description: Requiere un array con las cuentas seleccionadas para el asiento y sus importes
+ *       description: <strong>Requiere un JSON con las cuentas seleccionadas para el asiento y sus importes</strong>
  *       required: true
  *       content:
  *         application/json:
@@ -294,16 +298,36 @@ module.exports = router;
  *                   importe: -1000
  *     responses:
  *       201:
- *         description: CREATED
+ *         description: <strong>CREATED</strong>
  *         content:
  *           application/json:
  *             example:
  *               mensaje: "Asiento creado con éxito"
  *       500:
- *         description: Error Interno del Servidor
+ *         description: <strong>Error Interno del Servidor</strong>
  *         content:
  *           application/json:
  *             example:
  *               error: "Ocurrió un error al insertar el asiento."
  */
 
+
+//DOCUMENTACIÓN PARA ESTADO DE SITUACIÓN PATRIMONIAL
+
+/**
+ * @openapi
+ * /situacionPatrimonial:
+ *   get:
+ *     tags:
+ *       - Estados
+ *     description: <strong>DESCRIPCIÓN:</strong> "Retorna un JSON con todos los Rubros de Activos y Pasivos (Corrientes y No corrientes) junto con sus saldos y también retorna el total de los Activos y Pasivos"
+ *     responses:
+ *       200:
+ *         description: <strong>OK</strong>
+ *       500:
+ *         description: <strong>Error Interno del Servidor</strong>
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Ocurrió un error al mostrar el JSON de situación patrimonial."
+ */
