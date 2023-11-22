@@ -17,7 +17,7 @@ router
     .get('/llenarSelectAsientos', orquestador.cuentasSelectAsiento)
     .post('/insertarAsiento', orquestador.insertarAsiento)
 
-    //Ruta para estado patrimonial
+    //Ruta para estado de situación patrimonial
     .get('/situacionPatrimonial', orquestador.situacionPatrimonial);
 
 module.exports = router;
@@ -210,7 +210,7 @@ module.exports = router;
  *   get:
  *     tags:
  *       - Libro Diario
- *     description: <strong>DESCRIPCIÓN:</strong> "Muestra los datos del asiento tales como: N°Asiento | Fecha | Código de cuenta | Nombre de Cuenta | Importe"
+ *     description: <strong>DESCRIPCIÓN:</strong> "Muestra los datos del asiento tales como N°Asiento | Fecha | Código de cuenta | Nombre de Cuenta | Importe"
  *     responses:
  *       200:
  *         description: <strong>OK</strong>

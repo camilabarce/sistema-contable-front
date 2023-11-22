@@ -6,7 +6,8 @@ const situacionPatrimonial = (req, res) => {
             console.error("Error al mostrar el JSON de estado patrimonial:", error);
             res.status(500).json({ error: "Ocurrió un error al mostrar el JSON de situación patrimonial." });
             return;
-        }     
+        }    
+         
         console.log(jsonSituacionPatrimonial); 
         res.status(200).json(jsonSituacionPatrimonial);
       });

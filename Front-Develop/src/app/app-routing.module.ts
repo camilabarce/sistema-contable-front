@@ -17,6 +17,11 @@ const routes: Routes = [
         path: 'asientos',
         loadChildren: () =>
         import('./modules/asientos/asientos.module').then(mod => mod.AsientosModule)
+      },
+      {
+        path: 'estados',
+        loadChildren: () =>
+        import('./modules/estados/estados.module').then(mod => mod.EstadosModule)
       }
     ]
   }

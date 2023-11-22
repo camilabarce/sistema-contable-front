@@ -44,4 +44,9 @@ export class ApiService {
     const urlAsientos = `${this.ApiUrl}/mostrarAsientos`;
     return this.http.get(urlAsientos);
   }
+
+  jsonEstadoPatrimonial() {
+    const urlAsientos = `${this.ApiUrl}/situacionPatrimonial`;
+    return this.http.get(urlAsientos);
+  }
 }

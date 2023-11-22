@@ -1,0 +1,118 @@
+<h1>Tabla de ejemplo (Pueden modificar esta o hacer una de cero si lo desean)</h1>
+
+<table mat-table [dataSource]="patrimonioData">
+    <ng-container matColumnDef="header">
+      <th mat-header-cell *matHeaderCellDef colspan="4" class="headerTabla">
+        <p class="entidad">Denominación de la entidad: <span class="nombreEntidad">Sistemas Contables S.A</span></p>
+        <span class="text-center">Estado de situación Patrimonial al {{fecha}}</span>
+      </th>
+    </ng-container>
+  
+    <ng-container matColumnDef="activo">
+      <th mat-header-cell *matHeaderCellDef> Activos </th>
+    </ng-container>
+    <ng-container matColumnDef="saldoActivo">
+      <th mat-header-cell *matHeaderCellDef> Importe de Activos </th>
+    </ng-container>
+    <ng-container matColumnDef="pasivo">
+      <th mat-header-cell *matHeaderCellDef> Pasivos </th>
+    </ng-container>
+    <ng-container matColumnDef="saldoPasivo">
+      <th mat-header-cell *matHeaderCellDef> Importe de Pasivos </th>
+    </ng-container>
+  
+    <ng-container>
+      <ng-container matColumnDef="activoCorriente">
+        <th mat-header-cell *matHeaderCellDef> Activos Corrientes </th>
+        <td mat-cell *matCellDef="let item"></td>
+      </ng-container>
+      <ng-container matColumnDef="totalActivoCorriente">
+        <th mat-header-cell *matHeaderCellDef> </th>
+        <td mat-cell *matCellDef="let item"></td>
+      </ng-container>
+    </ng-container>
+  
+    <ng-container>
+      <ng-container matColumnDef="pasivoCorriente">
+        <th mat-header-cell *matHeaderCellDef> Pasivos Corrientes </th>
+        <td mat-cell *matCellDef="let item"></td>
+      </ng-container>
+      <ng-container matColumnDef="totalpasivoCorriente">
+        <th mat-header-cell *matHeaderCellDef> </th>
+        <td mat-cell *matCellDef="let item"></td>
+      </ng-container>
+    </ng-container>
+  
+    <ng-container>
+      <ng-container matColumnDef="activoNoCorriente">
+        <th mat-header-cell *matHeaderCellDef> Activos No Corrientes </th>
+        <td mat-cell *matCellDef="let item"></td>
+      </ng-container>
+      <ng-container matColumnDef="totalActivoNoCorriente">
+        <th mat-header-cell *matHeaderCellDef> </th>
+        <td mat-cell *matCellDef="let item"></td>
+        <td mat-cell></td>
+      </ng-container>
+    </ng-container>
+  
+    <ng-container>
+      <ng-container matColumnDef="pasivoNoCorriente">
+        <th mat-header-cell *matHeaderCellDef> Pasivos No Corrientes </th>
+        <td mat-cell *matCellDef="let item"></td>
+      </ng-container>
+      <ng-container matColumnDef="totalpasivoNoCorriente">
+        <th mat-header-cell *matHeaderCellDef> </th>
+        <td mat-cell *matCellDef="let item"></td>
+      </ng-container>
+    </ng-container>
+  
+    <ng-container matColumnDef="footer1">
+      <td mat-footer-cell *matFooterCellDef colspan="1">Total del Activo</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="footer2">
+      <td mat-footer-cell *matFooterCellDef colspan="1"></td>
+    </ng-container>
+  
+    <ng-container matColumnDef="footer3">
+      <td mat-footer-cell *matFooterCellDef colspan="1">Total del Pasivo</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="footer4">
+      <td mat-footer-cell *matFooterCellDef colspan="1"></td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="['header']"></tr>
+    <tr mat-header-row *matHeaderRowDef="['activo', 'saldoActivo', 'pasivo', 'saldoPasivo']"></tr>
+    <tr mat-header-row
+      *matHeaderRowDef="['activoCorriente', 'totalActivoCorriente', 'pasivoCorriente', 'totalpasivoCorriente']"></tr>
+    <tr mat-header-row
+      *matHeaderRowDef="['activoNoCorriente', 'totalActivoNoCorriente', 'pasivoNoCorriente', 'totalpasivoNoCorriente']">
+    </tr>
+    <tr mat-footer-row *matFooterRowDef="['footer1', 'footer2', 'footer3', 'footer4']"></tr>
+</table>
+
+<br><br><br><br>
+<h1>JSON que provee la info (Para verlo deben tener actualizada la BD)</h1>
+<pre>{{patrimonioData | json}}</pre>
+
+<h1>Por ejemplo, para ver Activos No Corrientes</h1>
+<pre>{{patrimonioData[1][0] | json}}</pre>
+
+<h1>Ejemplo de Activo Corriente en una Tabla</h1>
+
+<table mat-table [dataSource]="parsearJson(patrimonioData[0][0].activos_corrientes)">
+
+  <ng-container matColumnDef="rubro">
+    <th mat-header-cell *matHeaderCellDef><strong>Activos Corrientes</strong></th>
+    <td mat-cell *matCellDef="let element">{{ element.rubro }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="saldo">
+    <th mat-header-cell *matHeaderCellDef><strong>Importes de Activos Corrientes</strong></th>
+    <td mat-cell *matCellDef="let element">{{ element.saldo }}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="['rubro', 'saldo']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['rubro', 'saldo']"></tr>
+</table>
