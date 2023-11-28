@@ -6,7 +6,7 @@ const cors = require('cors');
 const app = express();
 const path = require('path'); // Para concatenar ruta del index.html
 const rutas = require('./Routes/rutasParaApi'); //Traemos las rutas desde el archivo
-const { swaggerDocs: apiVersionUno } = require('./Documentation/documentacionApi'); //Documentación de nuestra API
+const { swaggerDocs: apiVersionUno } = require('./Documentation/swagger'); //Documentación de nuestra API
 
 //Seteado del puerto
 app.set('port', process.env.PORT || 3000); // Asignamos un puerto desde un '.env' o puerto 3000 por defecto.
