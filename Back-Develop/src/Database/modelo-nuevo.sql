@@ -25,7 +25,10 @@ DELIMITER $$
 --
 -- Procedimientos
 --
+<<<<<<< Updated upstream
 DROP PROCEDURE IF EXISTS `agregarCuenta`$$
+=======
+>>>>>>> Stashed changes
 CREATE DEFINER=`root`@`localhost` PROCEDURE `agregarCuenta` (IN `grupoOption` INT(30), IN `bloqueOption` INT(30), IN `rubroOption` INT(30), IN `nuevaCuenta` VARCHAR(50))   BEGIN
 
 DECLARE ultimoIdCuenta INT;
@@ -51,7 +54,10 @@ VALUES (
 
 END$$
 
+<<<<<<< Updated upstream
 DROP PROCEDURE IF EXISTS `borrarCuenta`$$
+=======
+>>>>>>> Stashed changes
 CREATE DEFINER=`root`@`localhost` PROCEDURE `borrarCuenta` (IN `codigoCuenta` VARCHAR(9))   BEGIN
 	
 	UPDATE grupo g, bloque b, rubro r, cuentas c, tipo_cuentas tc
@@ -64,7 +70,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `borrarCuenta` (IN `codigoCuenta` VA
 	
 END$$
 
+<<<<<<< Updated upstream
 DROP PROCEDURE IF EXISTS `insertarAsiento`$$
+=======
+>>>>>>> Stashed changes
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarAsiento` (IN `jsonCuentasAsientos` JSON)   BEGIN
     DECLARE nuevoIdAsiento INT;
     DECLARE numerosJSON JSON;
@@ -107,27 +116,39 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarAsiento` (IN `jsonCuentasAs
     );
 END$$
 
+<<<<<<< Updated upstream
 DROP PROCEDURE IF EXISTS `llenarSelectAsientos`$$
+=======
+>>>>>>> Stashed changes
 CREATE DEFINER=`root`@`localhost` PROCEDURE `llenarSelectAsientos` ()   SELECT C.id_cuenta, C.nombre_cuenta as 'nombre' 
 FROM cuentas C
 WHERE C.mostrarCuenta = 1
 ORDER BY C.nombre_cuenta$$
 
+<<<<<<< Updated upstream
 DROP PROCEDURE IF EXISTS `modificarCuenta`$$
+=======
+>>>>>>> Stashed changes
 CREATE DEFINER=`root`@`localhost` PROCEDURE `modificarCuenta` (IN `nuevoNombre` VARCHAR(50), IN `codigoCuenta` VARCHAR(50), IN `nombreActual` VARCHAR(50))   UPDATE grupo G, bloque B, rubro R, cuentas C, tipo_cuentas TC
 SET C.nombre_cuenta = nuevoNombre
 WHERE CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta) = codigoCuenta
 AND C.nombre_cuenta = nombreActual
 AND (TC.id_grupo = G.id_grupo AND TC.id_bloque = B.id_bloque AND TC.id_rubro = R.id_rubro AND TC.id_cuenta = C.id_cuenta)$$
 
+<<<<<<< Updated upstream
 DROP PROCEDURE IF EXISTS `mostrarAsiento`$$
+=======
+>>>>>>> Stashed changes
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarAsiento` ()   SELECT A.id_asiento,  DATE_FORMAT(A.fecha, '%Y-%m-%d') as 'fecha_asiento', CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta)  AS 'codigo', C.nombre_cuenta as 'cuenta', AC.importe
 FROM grupo G, bloque B, rubro R, cuentas C, tipo_cuentas TC, asiento A, asiento_cuenta AC
 WHERE A.id_asiento = AC.id_asiento 
 AND C.id_cuenta = AC.id_cuenta
 AND G.id_grupo = TC.id_grupo AND B.id_bloque = TC.id_bloque AND R.id_rubro = TC.id_rubro AND C.id_cuenta = TC.id_cuenta$$
 
+<<<<<<< Updated upstream
 DROP PROCEDURE IF EXISTS `mostrarCuentas`$$
+=======
+>>>>>>> Stashed changes
 CREATE DEFINER=`root`@`localhost` PROCEDURE `mostrarCuentas` (IN `grupoOption` INT(11), IN `bloqueOption` INT(11), IN `rubroOption` INT(11))   select CONCAT(G.cod_grupo, B.cod_bloque, R.cod_rubro, C.cod_cuenta) AS 'codigo',
        CONCAT(UPPER(SUBSTRING(C.nombre_cuenta, 1, 1)), LOWER(SUBSTRING(C.nombre_cuenta, 2))) AS 'nombre',
        CONCAT(UPPER(SUBSTRING(CONCAT(G.nombre_grupo, ' ', B.nombre_bloque), 1, 1)), LOWER(SUBSTRING(CONCAT(G.nombre_grupo, ' ', B.nombre_bloque), 2))) AS 'tipo', C.saldo_cuenta AS 'saldo'
@@ -136,7 +157,10 @@ where (G.id_grupo = TC.id_grupo and B.id_bloque = TC.id_bloque and R.id_rubro = 
 AND (TC.id_grupo = grupoOption and TC.id_bloque = bloqueOption and TC.id_rubro = rubroOption)
 AND C.mostrarCuenta = 1$$
 
+<<<<<<< Updated upstream
 DROP PROCEDURE IF EXISTS `situacionPatrimonial`$$
+=======
+>>>>>>> Stashed changes
 CREATE DEFINER=`root`@`localhost` PROCEDURE `situacionPatrimonial` ()   BEGIN
 	
     /*Activos corrientes*/
@@ -144,7 +168,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `situacionPatrimonial` ()   BEGIN
     JSON_OBJECT('rubro', nombre_rubro, 'saldo', saldo)
 ) AS activos_corrientes
 FROM (
+<<<<<<< Updated upstream
     SELECT R.nombre_rubro as nombre_rubro, SUM(C.saldo_cuenta) as saldo
+=======
+    SELECT R.nombre_rubro, SUM(C.saldo_cuenta) as saldo
+>>>>>>> Stashed changes
     FROM tipo_cuentas TC
     INNER JOIN cuentas C ON C.id_cuenta = TC.id_cuenta
     INNER JOIN rubro R ON R.id_rubro = TC.id_rubro
@@ -160,7 +188,11 @@ FROM (
     JSON_OBJECT('rubro', nombre_rubro, 'saldo', saldo)
 ) AS activos_no_corrientes
 FROM (
+<<<<<<< Updated upstream
     SELECT R.nombre_rubro as nombre_rubro, SUM(C.saldo_cuenta) as saldo
+=======
+    SELECT R.nombre_rubro, SUM(C.saldo_cuenta) as saldo
+>>>>>>> Stashed changes
     FROM tipo_cuentas TC
     INNER JOIN cuentas C ON C.id_cuenta = TC.id_cuenta
     INNER JOIN rubro R ON R.id_rubro = TC.id_rubro
@@ -173,7 +205,11 @@ FROM (
     /*Pasivos corrientes*/
      SELECT JSON_ARRAYAGG(JSON_OBJECT('rubro', nombre_rubro, 'saldo', saldo)) AS pasivos_corrientes
 FROM (
+<<<<<<< Updated upstream
     SELECT R.nombre_rubro as nombre_rubro, SUM(C.saldo_cuenta) as saldo
+=======
+    SELECT R.nombre_rubro, SUM(C.saldo_cuenta) as saldo
+>>>>>>> Stashed changes
     FROM tipo_cuentas TC
     INNER JOIN cuentas C ON C.id_cuenta = TC.id_cuenta
     INNER JOIN rubro R ON R.id_rubro = TC.id_rubro
@@ -185,7 +221,11 @@ FROM (
 	 
    SELECT JSON_ARRAYAGG(JSON_OBJECT('rubro', nombre_rubro, 'saldo', saldo)) AS pasivos_no_corrientes
 FROM (
+<<<<<<< Updated upstream
     SELECT R.nombre_rubro as nombre_rubro, SUM(C.saldo_cuenta) as saldo
+=======
+    SELECT R.nombre_rubro, SUM(C.saldo_cuenta) as saldo
+>>>>>>> Stashed changes
     FROM tipo_cuentas TC
     INNER JOIN cuentas C ON C.id_cuenta = TC.id_cuenta
     INNER JOIN rubro R ON R.id_rubro = TC.id_rubro
@@ -195,6 +235,7 @@ FROM (
     GROUP BY R.nombre_rubro
 ) AS subconsulta;
 
+<<<<<<< Updated upstream
 -- Obtener los resultados en formato JSON
 SELECT
 JSON_ARRAYAGG(
@@ -215,6 +256,8 @@ FROM(
     GROUP BY ru.nombre_rubro
 ) AS subconsulta;
 
+=======
+>>>>>>> Stashed changes
 /*Total del Activo y del Pasivo*/
 SELECT  JSON_OBJECT('activo', SUM(C.saldo_cuenta)) AS total
 FROM tipo_cuentas TC
@@ -230,6 +273,7 @@ INNER JOIN cuentas C ON C.id_cuenta = TC.id_cuenta
 INNER JOIN rubro R ON R.id_rubro = TC.id_rubro
 INNER JOIN grupo G ON G.id_grupo = TC.id_grupo
 INNER JOIN bloque B ON B.id_bloque = TC.id_bloque
+<<<<<<< Updated upstream
 WHERE G.cod_grupo = '2'
 UNION
 -- Calcular el Patrimonio Neto
@@ -242,6 +286,9 @@ SELECT JSON_OBJECT('patrimonio_neto', SUM(saldo)) AS total
         WHERE re.id_resultado IN (1, 2)
         GROUP BY c.id_cuenta
 ) AS subconsulta;
+=======
+WHERE G.cod_grupo = '2';
+>>>>>>> Stashed changes
 
 
 END$$

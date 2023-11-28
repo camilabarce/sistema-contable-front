@@ -12,7 +12,7 @@ export class PatrimonialComponent implements OnInit {
   patrimonioData: any[] = [];
   patrimonioJson() {
     this.apiService.jsonEstadoPatrimonial().subscribe((data: any) => {
-      this.patrimonioData = data ;
+      this.patrimonioData = data;
       console.log("Patrimonio: ", this.patrimonioData);
     });
 
@@ -21,6 +21,7 @@ export class PatrimonialComponent implements OnInit {
 
   ngOnInit(){
     this.patrimonioJson();
+    // this.parsearTotal();
   }
 
   parsearJson(cadenaJson: any): any[] {
@@ -36,7 +37,16 @@ export class PatrimonialComponent implements OnInit {
       return [];
     }
   }
-  
+
+  getTotalActivo(element: any): number {
+    return element && element.length > 0 ? element[0].activo : 0.00;
+  }
+
+  getTotalPasivo(element: any): number {
+    return element && element.length > 0 ? element[0].pasivo : 0.00;
+  }
+
+
   fecha: string = this.mostrarFecha(); //Pongo la fecha en una variable para que no haga llamadas recurrentes
   mostrarFecha() {
     const dia = new Date().getDate().toString();
