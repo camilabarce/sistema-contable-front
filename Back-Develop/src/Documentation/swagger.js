@@ -14,7 +14,7 @@ const options = {
         description:"<a href='http://localhost:3000/' target='_self'>Volver al menú principal</a>", 
         version: '1.0.0'},
     },
-    apis: ['src/Routes/rutasParaApi.js']
+    apis: ['src/Documentation/documentacion.js']
 };
 
 //Formateamos los metadatos a un JSON entendido por Swagger
