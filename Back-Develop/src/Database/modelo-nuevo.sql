@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-11-2023 a las 18:23:35
+-- Tiempo de generación: 03-12-2023 a las 18:17:36
 -- Versión del servidor: 8.0.31
 -- Versión de PHP: 8.1.6
 
@@ -67,6 +67,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarAsiento` (IN `jsonCuentasAs
     DECLARE numerosJSON JSON;
     DECLARE cuentaValue INT;
     DECLARE importe DECIMAL(10, 2);
+    DECLARE totalResultadoEjercicio DECIMAL(10,2);
 
     SELECT MAX(id_asiento) INTO nuevoIdAsiento FROM asiento;
 
@@ -96,17 +97,37 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarAsiento` (IN `jsonCuentasAs
     UPDATE cuentas AS C
     SET C.saldo_cuenta = 0;
 
-    /*Actualizo los saldos sumando los importes del asiento correspondiente*/
+    /*Actualizo los saldos sumando los importes del asiento correspondiente (Todos menos el saldo de la cuenta 117 "Resultado del Ejercicio")*/
     UPDATE cuentas AS C
     SET C.saldo_cuenta = (SELECT SUM(AC.importe) 
                  FROM asiento_cuenta AS AC
                  WHERE AC.id_cuenta = C.id_cuenta
+                 AND C.mostrarCuenta = 1
+                 AND C.id_cuenta <> 117
     );
+    
+    /*Saldo de la cuenta "Resultado del Ejercicio" */
+    SET totalResultadoEjercicio = (
+        SELECT
+            SUM(SUM(CASE WHEN re.id_resultado = 1 THEN c.saldo_cuenta ELSE 0 END) -
+                SUM(CASE WHEN re.id_resultado = 2 THEN c.saldo_cuenta ELSE 0 END)) 
+        OVER (ORDER BY c.id_cuenta ASC) AS total
+        FROM cuentas c
+        INNER JOIN resultado_cuenta rc ON c.id_cuenta = rc.id_cuenta
+        INNER JOIN resultado re ON re.id_resultado = rc.id_resultado
+        WHERE re.id_resultado IN (1, 2)
+    );
+   
+    /*Actualizo el saldo de la cuenta "Resultado del Ejercicio"*/
+    UPDATE cuentas AS C 
+    SET C.saldo_cuenta = totalResultadoEjercicio 
+    WHERE id_cuenta = 117;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `llenarSelectAsientos` ()   SELECT C.id_cuenta, C.nombre_cuenta as 'nombre' 
 FROM cuentas C
 WHERE C.mostrarCuenta = 1
+AND C.id_cuenta <> 117
 ORDER BY C.nombre_cuenta$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `modificarCuenta` (IN `nuevoNombre` VARCHAR(50), IN `codigoCuenta` VARCHAR(50), IN `nombreActual` VARCHAR(50))   UPDATE grupo G, bloque B, rubro R, cuentas C, tipo_cuentas TC
@@ -143,6 +164,7 @@ FROM (
     INNER JOIN grupo G ON G.id_grupo = TC.id_grupo
     INNER JOIN bloque B ON B.id_bloque = TC.id_bloque
     WHERE CONCAT(G.cod_grupo, B.cod_bloque) = '11'
+    AND C.mostrarCuenta = 1
     GROUP BY R.nombre_rubro
 ) AS subconsulta;
 
@@ -159,6 +181,7 @@ FROM (
     INNER JOIN grupo G ON G.id_grupo = TC.id_grupo
     INNER JOIN bloque B ON B.id_bloque = TC.id_bloque
     WHERE CONCAT(G.cod_grupo, B.cod_bloque) = '12'
+    AND C.mostrarCuenta = 1
     GROUP BY R.nombre_rubro
 ) AS subconsulta;
    
@@ -172,6 +195,7 @@ FROM (
     INNER JOIN grupo G ON G.id_grupo = TC.id_grupo
     INNER JOIN bloque B ON B.id_bloque = TC.id_bloque
     WHERE CONCAT(G.cod_grupo, B.cod_bloque) = '21'
+    AND C.mostrarCuenta = 1
     GROUP BY R.nombre_rubro
 ) AS subconsulta;
 	 
@@ -184,23 +208,25 @@ FROM (
     INNER JOIN grupo G ON G.id_grupo = TC.id_grupo
     INNER JOIN bloque B ON B.id_bloque = TC.id_bloque
     WHERE CONCAT(G.cod_grupo, B.cod_bloque) = '22'
+    AND C.mostrarCuenta = 1
     GROUP BY R.nombre_rubro
 ) AS subconsulta;
 
 /*Resultados Positivos y Negativos*/
 SELECT
-JSON_ARRAYAGG(JSON_OBJECT('rubro', nombre_rubro,'saldo', sub_total)) AS 
+JSON_ARRAYAGG(JSON_OBJECT('rubro', nombre_rubro, 'saldo', saldo)) AS 
 resultado_del_ejercicio
 FROM(
-    SELECT ru.nombre_rubro AS nombre_rubro, 
-      SUM(CASE WHEN re.id_resultado = 1 THEN c.saldo_cuenta ELSE -c.saldo_cuenta END) AS sub_total
-    FROM cuentas c
-    INNER JOIN resultado_cuenta rc ON c.id_cuenta = rc.id_cuenta
-    INNER JOIN resultado re ON re.id_resultado = rc.id_resultado
-    INNER JOIN tipo_cuentas tc ON c.id_cuenta = tc.id_cuenta
-    INNER JOIN rubro ru ON ru.id_rubro = tc.id_rubro
-    WHERE re.id_resultado IN (1, 2)
-    GROUP BY ru.nombre_rubro
+    SELECT R.nombre_rubro AS nombre_rubro, 
+      SUM(CASE WHEN re.id_resultado IN (1, 2) THEN C.saldo_cuenta ELSE 0 END) AS saldo
+    FROM cuentas C
+    INNER JOIN resultado_cuenta RC ON C.id_cuenta = RC.id_cuenta
+    INNER JOIN resultado RE ON RE.id_resultado = RC.id_resultado
+    INNER JOIN tipo_cuentas TC ON C.id_cuenta = TC.id_cuenta
+    INNER JOIN rubro R ON R.id_rubro = TC.id_rubro
+    WHERE RE.id_resultado IN (1, 2)
+    AND C.mostrarCuenta = 1
+    GROUP BY R.nombre_rubro
 ) AS subconsulta;
 
 /*Total del Activo, Pasivo, y Patrimonio Neto*/
@@ -211,6 +237,25 @@ INNER JOIN rubro R ON R.id_rubro = TC.id_rubro
 INNER JOIN grupo G ON G.id_grupo = TC.id_grupo
 INNER JOIN bloque B ON B.id_bloque = TC.id_bloque
 WHERE G.cod_grupo = '1'
+AND C.mostrarCuenta = 1
+UNION
+SELECT JSON_ARRAY(JSON_OBJECT('activo_corriente', SUM(C.saldo_cuenta))) AS total
+FROM tipo_cuentas TC
+INNER JOIN cuentas C ON C.id_cuenta = TC.id_cuenta
+INNER JOIN rubro R ON R.id_rubro = TC.id_rubro
+INNER JOIN grupo G ON G.id_grupo = TC.id_grupo
+INNER JOIN bloque B ON B.id_bloque = TC.id_bloque
+WHERE CONCAT(G.cod_grupo, B.cod_bloque) = '11'
+AND C.mostrarCuenta = 1
+UNION
+SELECT JSON_ARRAY(JSON_OBJECT('activo_no_corriente', SUM(C.saldo_cuenta))) AS total
+FROM tipo_cuentas TC
+INNER JOIN cuentas C ON C.id_cuenta = TC.id_cuenta
+INNER JOIN rubro R ON R.id_rubro = TC.id_rubro
+INNER JOIN grupo G ON G.id_grupo = TC.id_grupo
+INNER JOIN bloque B ON B.id_bloque = TC.id_bloque
+WHERE CONCAT(G.cod_grupo, B.cod_bloque) = '12'
+AND C.mostrarCuenta = 1
 UNION
 SELECT JSON_ARRAY(JSON_OBJECT('pasivo', SUM(C.saldo_cuenta))) AS total
 FROM tipo_cuentas TC
@@ -219,18 +264,60 @@ INNER JOIN rubro R ON R.id_rubro = TC.id_rubro
 INNER JOIN grupo G ON G.id_grupo = TC.id_grupo
 INNER JOIN bloque B ON B.id_bloque = TC.id_bloque
 WHERE G.cod_grupo = '2'
+AND C.mostrarCuenta = 1
 UNION
-SELECT JSON_ARRAY(JSON_OBJECT('patrimonio_neto', SUM(saldo))) AS total
+SELECT JSON_ARRAY(JSON_OBJECT('pasivo_corriente', SUM(C.saldo_cuenta))) AS total
+FROM tipo_cuentas TC
+INNER JOIN cuentas C ON C.id_cuenta = TC.id_cuenta
+INNER JOIN rubro R ON R.id_rubro = TC.id_rubro
+INNER JOIN grupo G ON G.id_grupo = TC.id_grupo
+INNER JOIN bloque B ON B.id_bloque = TC.id_bloque
+WHERE CONCAT(G.cod_grupo, B.cod_bloque) = '21'
+AND C.mostrarCuenta = 1
+UNION
+SELECT JSON_ARRAY(JSON_OBJECT('pasivo_no_corriente', SUM(C.saldo_cuenta))) AS total
+FROM tipo_cuentas TC
+INNER JOIN cuentas C ON C.id_cuenta = TC.id_cuenta
+INNER JOIN rubro R ON R.id_rubro = TC.id_rubro
+INNER JOIN grupo G ON G.id_grupo = TC.id_grupo
+INNER JOIN bloque B ON B.id_bloque = TC.id_bloque
+WHERE CONCAT(G.cod_grupo, B.cod_bloque) = '22'
+AND C.mostrarCuenta = 1
+UNION
+SELECT JSON_ARRAY(JSON_OBJECT('patrimonio_neto', saldo)) AS total
 FROM (
-    SELECT SUM(CASE WHEN re.id_resultado = 1 THEN c.saldo_cuenta ELSE -c.saldo_cuenta END) AS saldo
-    FROM cuentas c
-    INNER JOIN resultado_cuenta rc ON c.id_cuenta = rc.id_cuenta
-    INNER JOIN resultado re ON re.id_resultado = rc.id_resultado
-    WHERE re.id_resultado IN (1, 2)
-    GROUP BY c.id_cuenta
+    SELECT SUM(SUM(CASE WHEN RE.id_resultado = 1 THEN C.saldo_cuenta ELSE 0 END) -
+               SUM(CASE WHEN RE.id_resultado = 2 THEN C.saldo_cuenta ELSE 0 END)) OVER (ORDER BY C.id_cuenta ASC) AS saldo
+    FROM cuentas C
+    INNER JOIN resultado_cuenta RC ON C.id_cuenta = RC.id_cuenta
+    INNER JOIN resultado RE ON RE.id_resultado = RC.id_resultado
+    WHERE RE.id_resultado IN (1, 2)
+    AND C.mostrarCuenta = 1
+) AS subconsulta
+UNION
+SELECT JSON_ARRAY(JSON_OBJECT('pasivo_patrimonio_neto', pasivo_patrimonio_neto)) AS total
+FROM (
+    SELECT SUM(total) AS pasivo_patrimonio_neto
+FROM (
+    SELECT SUM(C.saldo_cuenta) AS total
+    FROM tipo_cuentas TC
+    INNER JOIN cuentas C ON C.id_cuenta = TC.id_cuenta
+    INNER JOIN rubro R ON R.id_rubro = TC.id_rubro
+    INNER JOIN grupo G ON G.id_grupo = TC.id_grupo
+    INNER JOIN bloque B ON B.id_bloque = TC.id_bloque
+    WHERE G.cod_grupo = '2'
+    UNION
+    SELECT saldo AS total
+    FROM (
+        SELECT SUM(SUM(CASE WHEN RE.id_resultado = 1 THEN C.saldo_cuenta ELSE 0 END) -
+                    SUM(CASE WHEN RE.id_resultado = 2 THEN C.saldo_cuenta ELSE 0 END)) OVER (ORDER BY C.id_cuenta ASC) AS saldo
+        FROM cuentas C
+        INNER JOIN resultado_cuenta RC ON C.id_cuenta = RC.id_cuenta
+        INNER JOIN resultado RE ON RE.id_resultado = RC.id_resultado
+        WHERE RE.id_resultado IN (1, 2)
+    ) AS subconsulta
+) AS resultado_total
 ) AS subconsulta;
-
-
 
 END$$
 
