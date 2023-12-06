@@ -1,7 +1,7 @@
 <mat-card class="card">
   <mat-card-header>
     <mat-card-title>Denominación de la entidad: <strong>Sistemas Contables S.A</strong></mat-card-title>
-    <mat-card-subtitle>Estado de Situación Patrimonial al <strong>{{fecha}}</strong></mat-card-subtitle>
+    <mat-card-subtitle class="text-center">Estado de Situación Patrimonial al <strong>{{ fecha }}</strong></mat-card-subtitle>
   </mat-card-header>
 </mat-card>
 <div class="container">
@@ -94,11 +94,11 @@
           <tr mat-footer-row *matFooterRowDef="['rubro', 'saldo']"></tr>
         </table>
       </div>
-      <div class="border footer bold">
+      <div class="footer bold border bg">
         <p>Total del Pasivo</p>
         <p>{{ getTotalPasivo() }}</p>
       </div>
-      <div class="border footer bold">
+      <div class="footer bold border-right">
         <p>Patrimonio Neto</p>
         <p>{{ getTotalPatrimonioNeto() }}</p>
       </div>

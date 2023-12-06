@@ -21,7 +21,6 @@ export class PatrimonialComponent implements OnInit {
 
   ngOnInit(){
     this.patrimonioJson();
-    // this.parsearTotal();
   }
 
   parsearJson(cadenaJson: any): any[] {
@@ -52,7 +51,7 @@ export class PatrimonialComponent implements OnInit {
     let total = 0;
   
     for (const grupo of this.patrimonioData) {
-      // Verificar si grupo es un iterable antes de intentar recorrerlo
+      // Verificar si grupo es un iterable antes de recorrerlo
       if (Symbol.iterator in Object(grupo)) {
         for (const elemento of grupo) {
           const totalArray = elemento.total;

@@ -1,2 +1,27 @@
-<h2>En este componente se debe agregar una tabla que muestre los rubros de Resultados positivos y Negativos y que en el footer mostrará la suma de ambos que será el Patrimonio Neto</h2>
+<mat-card class="card">
+    <mat-card-header>
+        <mat-card-title>Denominación de la entidad: <strong>Sistemas Contables S.A</strong></mat-card-title>
+        <mat-card-subtitle class="text-center"><strong>Estado de Resultados al {{ fecha }}</strong></mat-card-subtitle>
+    </mat-card-header>
+</mat-card>
+<div class="container">
+    <div class="border">
+        <table mat-table [dataSource]="parsearJson(patrimonioData[4][0].resultado_del_ejercicio)">
+            <ng-container matColumnDef="rubro">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element" class="capitalize">{{ element.rubro }}</td>
+            <td mat-footer-cell *matFooterCellDef class="bold bg">{{ getGananciaPerdida() }} del Ejercicio</td>
+            </ng-container>
 
+            <ng-container matColumnDef="saldo">
+            <th mat-header-cell *matHeaderCellDef><strong>$</strong></th>
+            <td mat-cell *matCellDef="let element">{{ element.saldo }}</td>
+            <td mat-footer-cell *matFooterCellDef class="bold bg">{{ getTotalResultadoDelEjercicio() }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="['rubro', 'saldo']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['rubro', 'saldo'];"></tr>
+            <tr mat-footer-row *matFooterRowDef="['rubro', 'saldo']"></tr>
+        </table>  
+    </div>
+</div>
