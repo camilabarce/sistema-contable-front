@@ -38,15 +38,6 @@ export class PatrimonialComponent implements OnInit {
     }
   }
 
-  getTotalActivo(element: any): number {
-    return element && element.length > 0 ? element[0].activo : 0.00;
-  }
-
-  getTotalPasivo(element: any): number {
-    return element && element.length > 0 ? element[0].pasivo : 0.00;
-  }
-
-
   fecha: string = this.mostrarFecha(); //Pongo la fecha en una variable para que no haga llamadas recurrentes
   mostrarFecha() {
     const dia = new Date().getDate().toString();
@@ -57,4 +48,48 @@ export class PatrimonialComponent implements OnInit {
     return fechaHeader;
   }
   
+  getTotales(tipo: string): number {
+    let total = 0;
+  
+    for (const grupo of this.patrimonioData) {
+      // Verificar si grupo es un iterable antes de intentar recorrerlo
+      if (Symbol.iterator in Object(grupo)) {
+        for (const elemento of grupo) {
+          const totalArray = elemento.total;
+          if (totalArray) {
+            const totalObj = this.parsearJson(totalArray)[0];
+            if (totalObj && totalObj[tipo] !== undefined) {
+              total += parseFloat(totalObj[tipo]);
+            }
+          }
+        }
+      }
+    }
+  
+    return total;
+  }
+  getTotalActivoCorriente(): number {
+    return this.getTotales('activo_corriente');
+  }
+  getTotalActivoNoCorriente(): number {
+    return this.getTotales('activo_no_corriente');
+  }
+  getTotalActivo(): number {
+    return this.getTotales('activo');
+  }
+  getTotalPasivoCorriente(): number {
+    return this.getTotales('pasivo_corriente');
+  }
+  getTotalPasivoNoCorriente(): number {
+    return this.getTotales('pasivo_no_corriente');
+  }
+  getTotalPasivo(): number {
+    return this.getTotales('pasivo');
+  }
+  getTotalPatrimonioNeto(): number {
+    return this.getTotales('patrimonio_neto');
+  }
+  totalPasivoYPatrimonioNeto(): number {
+    return this.getTotalPasivo() + this.getTotalPatrimonioNeto();
+  }
 }
