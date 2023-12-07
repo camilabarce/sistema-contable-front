@@ -19,11 +19,24 @@
     padding-bottom: 1rem;
     align-items: center;
 }
+.header{
+    font-family: Roboto, sans-serif;
+    letter-spacing: .0125em;
+    font-size: 0.97rem;
+    color: rgb(230, 218, 195);
+    background-color: #673ab7 !important;
+}
 .capitalize{
     text-transform: capitalize;
 }
 .gap{
     gap: 5rem;
+}
+.subtotal{
+    font-family: Roboto, sans-serif;
+    letter-spacing: .0125em;
+    font-size: 0.97rem;
+    background-color: rgba(183, 181, 58, 0.74) !important;
 }
 .totals {
     background-color: lightgray;
@@ -36,6 +49,8 @@
     padding: 1rem 1rem 0;
     display: flex;
     justify-content: space-between;
+    letter-spacing: .0125em;
+    font-size: 0.97rem;
 }
 .bold {
     font-weight: bold;

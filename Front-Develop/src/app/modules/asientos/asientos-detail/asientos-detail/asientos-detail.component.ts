@@ -44,7 +44,6 @@ export class AsientosDetailComponent implements OnInit {
   totalDebe: number = 0;
   totalHaber: number = 0;
 
-
   agregarCuenta() {
     if (this.cuentaSeleccionada !== null) {
       const cuenta = this.cuentasApi.find((cuenta) => cuenta.id_cuenta === this.cuentaSeleccionada);
