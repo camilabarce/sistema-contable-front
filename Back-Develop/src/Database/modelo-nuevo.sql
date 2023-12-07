@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-12-2023 a las 18:17:36
+-- Tiempo de generación: 07-12-2023 a las 15:25:41
 -- Versión del servidor: 8.0.31
 -- Versión de PHP: 8.1.6
 
@@ -109,13 +109,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarAsiento` (IN `jsonCuentasAs
     /*Saldo de la cuenta "Resultado del Ejercicio" */
     SET totalResultadoEjercicio = (
         SELECT
-            SUM(SUM(CASE WHEN re.id_resultado = 1 THEN c.saldo_cuenta ELSE 0 END) -
-                SUM(CASE WHEN re.id_resultado = 2 THEN c.saldo_cuenta ELSE 0 END)) 
-        OVER (ORDER BY c.id_cuenta ASC) AS total
-        FROM cuentas c
-        INNER JOIN resultado_cuenta rc ON c.id_cuenta = rc.id_cuenta
-        INNER JOIN resultado re ON re.id_resultado = rc.id_resultado
-        WHERE re.id_resultado IN (1, 2)
+            SUM(SUM(CASE WHEN RE.id_resultado = 1 THEN C.saldo_cuenta ELSE 0 END) -
+                SUM(CASE WHEN RE.id_resultado = 2 THEN C.saldo_cuenta ELSE 0 END)) 
+        OVER (ORDER BY C.id_cuenta ASC) AS total
+        FROM cuentas C
+        INNER JOIN resultado_cuenta RC ON C.id_cuenta = RC.id_cuenta
+        INNER JOIN resultado RE ON RE.id_resultado = RC.id_resultado
+        WHERE RE.id_resultado IN (1, 2)
     );
    
     /*Actualizo el saldo de la cuenta "Resultado del Ejercicio"*/
@@ -214,8 +214,7 @@ FROM (
 
 /*Resultados Positivos y Negativos*/
 SELECT
-JSON_ARRAYAGG(JSON_OBJECT('rubro', nombre_rubro, 'saldo', saldo)) AS 
-resultado_del_ejercicio
+JSON_ARRAYAGG(JSON_OBJECT('rubro', nombre_rubro, 'saldo', saldo)) AS resultado_del_ejercicio
 FROM(
     SELECT R.nombre_rubro AS nombre_rubro, 
       SUM(CASE WHEN re.id_resultado IN (1, 2) THEN C.saldo_cuenta ELSE 0 END) AS saldo
@@ -287,7 +286,7 @@ UNION
 SELECT JSON_ARRAY(JSON_OBJECT('patrimonio_neto', saldo)) AS total
 FROM (
     SELECT SUM(SUM(CASE WHEN RE.id_resultado = 1 THEN C.saldo_cuenta ELSE 0 END) -
-               SUM(CASE WHEN RE.id_resultado = 2 THEN C.saldo_cuenta ELSE 0 END)) OVER (ORDER BY C.id_cuenta ASC) AS saldo
+               ABS(SUM(CASE WHEN RE.id_resultado = 2 THEN C.saldo_cuenta ELSE 0 END))) OVER (ORDER BY C.id_cuenta ASC) AS saldo
     FROM cuentas C
     INNER JOIN resultado_cuenta RC ON C.id_cuenta = RC.id_cuenta
     INNER JOIN resultado RE ON RE.id_resultado = RC.id_resultado
@@ -310,14 +309,21 @@ FROM (
     SELECT saldo AS total
     FROM (
         SELECT SUM(SUM(CASE WHEN RE.id_resultado = 1 THEN C.saldo_cuenta ELSE 0 END) -
-                    SUM(CASE WHEN RE.id_resultado = 2 THEN C.saldo_cuenta ELSE 0 END)) OVER (ORDER BY C.id_cuenta ASC) AS saldo
+                    ABS(SUM(CASE WHEN RE.id_resultado = 2 THEN C.saldo_cuenta ELSE 0 END))) OVER (ORDER BY C.id_cuenta ASC) AS saldo
         FROM cuentas C
         INNER JOIN resultado_cuenta RC ON C.id_cuenta = RC.id_cuenta
         INNER JOIN resultado RE ON RE.id_resultado = RC.id_resultado
         WHERE RE.id_resultado IN (1, 2)
     ) AS subconsulta
 ) AS resultado_total
-) AS subconsulta;
+) AS subconsulta
+UNION
+SELECT JSON_ARRAY(JSON_OBJECT('ordinario', SUM(C.saldo_cuenta))) AS total
+FROM cuentas C
+INNER JOIN tipo_cuentas TC ON TC.id_cuenta = C.id_cuenta
+INNER JOIN bloque B ON TC.id_bloque = B.id_bloque
+WHERE B.id_bloque = 3
+AND C.mostrarCuenta = 1;
 
 END$$
 
@@ -545,8 +551,7 @@ INSERT INTO `cuentas` (`id_cuenta`, `nombre_cuenta`, `cod_cuenta`, `saldo_cuenta
 (155, 'impuesto a operaciones ordinarias', '001', '0.00', 1),
 (156, 'impuesto neto a las ganancias', '001', '0.00', 1),
 (157, 'robo', '001', '0.00', 1),
-(158, 'incendio', '002', '0.00', 1),
-(159, 'NuevaSwagger', '007', '0.00', 0);
+(158, 'incendio', '002', '0.00', 1);
 
 -- --------------------------------------------------------
 
@@ -878,8 +883,7 @@ INSERT INTO `tipo_cuentas` (`id_grupo`, `id_bloque`, `id_rubro`, `id_cuenta`) VA
 (4, 3, 36, 155),
 (4, 3, 37, 156),
 (4, 4, 38, 157),
-(4, 4, 38, 158),
-(1, 1, 1, 159);
+(4, 4, 38, 158);
 
 --
 -- Índices para tablas volcadas
