@@ -45,12 +45,31 @@ export class ResultadosComponent {
       return [];
     }
   }
+
+  getTotales(tipo: string): number {
+    let total = 0;
+  
+    for (const grupo of this.patrimonioData) {
+      // Verificar si grupo es un iterable antes de recorrerlo
+      if (Symbol.iterator in Object(grupo)) {
+        for (const elemento of grupo) {
+          const totalArray = elemento.total;
+          if (totalArray) {
+            const totalObj = this.parsearJson(totalArray)[0];
+            if (totalObj && totalObj[tipo] !== undefined) {
+              total += parseFloat(totalObj[tipo]);
+            }
+          }
+        }
+      }
+    }
+    return total;
+  }
+
   getTotalResultadoDelEjercicio(): number {
     let total = 0;
-    
     // Obtener la lista de rubros del resultado del ejercicio
     const resultadoEjercicio = this.parsearJson(this.patrimonioData[4][0].resultado_del_ejercicio);
-    
     // Verificar que la lista de rubros sea un array
     if (Array.isArray(resultadoEjercicio)) {
       // Sumar los saldos de cada rubro
@@ -58,11 +77,22 @@ export class ResultadosComponent {
         total += parseFloat(rubro.saldo || 0);
       });
     }
-
     return total;
   }
-  getGananciaPerdida(): string {
+  getGananciaPerdidaEjercicio(): string {
     const resultado = this.getTotalResultadoDelEjercicio();
+    return resultado >= 0 ? 'GANANCIA' : 'PÉRDIDA';
+  }
+  mostrarResultadoAbsoluto(): number {
+    const resultado = this.getTotalResultadoDelEjercicio();
+    return Math.abs(resultado);
+  }
+
+  getTotalOrdinario(): number {
+    return this.getTotales('ordinario');
+  }
+  getGananciaPerdidaOrdinarias(): string {
+    const resultado = this.getTotalOrdinario();
     return resultado >= 0 ? 'Ganancia' : 'Pérdida';
   }
 }

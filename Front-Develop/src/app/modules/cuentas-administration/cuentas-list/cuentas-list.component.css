@@ -16,6 +16,15 @@
     width: 25vw;
     margin-right: 1rem;
 }
+@media screen and (max-width: 768px) {
+    .content {
+        flex-direction: column; 
+        margin: auto;
+    }
+    .campos {
+        width: 90vw;
+    }
+}
 .btn {
     height: 3.4rem;
     margin: .25rem .5rem;

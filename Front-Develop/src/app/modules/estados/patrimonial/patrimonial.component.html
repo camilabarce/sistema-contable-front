@@ -11,9 +11,9 @@
       <div class="border">
         <table mat-table [dataSource]="parsearJson(patrimonioData[0][0].activos_corrientes)">        
             <ng-container matColumnDef="rubro">
-              <th mat-header-cell *matHeaderCellDef class="header"><strong>Activo Corriente</strong></th>
+              <th mat-header-cell *matHeaderCellDef class="header"><strong>Activo corriente</strong></th>
               <td mat-cell *matCellDef="let element" class="capitalize">{{ element.rubro }}</td>
-              <td mat-footer-cell *matFooterCellDef class="bold subtotal">Total del Activo Corriente</td>
+              <td mat-footer-cell *matFooterCellDef class="bold subtotal">Total del activo corriente</td>
             </ng-container>
 
             <ng-container matColumnDef="saldo">
@@ -30,9 +30,9 @@
       <div class="border">
         <table mat-table [dataSource]="parsearJson(patrimonioData[1][0].activos_no_corrientes)">
           <ng-container matColumnDef="rubro">
-            <th mat-header-cell *matHeaderCellDef class="header"><strong>Activo No Corriente</strong></th>
+            <th mat-header-cell *matHeaderCellDef class="header"><strong>Activo no corriente</strong></th>
             <td mat-cell *matCellDef="let element" class="capitalize">{{ element.rubro }}</td>
-            <td mat-footer-cell *matFooterCellDef class="bold subtotal">Total del Activo No Corriente</td>
+            <td mat-footer-cell *matFooterCellDef class="bold subtotal">Total del activo no corriente</td>
           </ng-container>
         
           <ng-container matColumnDef="saldo">
@@ -46,7 +46,7 @@
           <tr mat-footer-row *matFooterRowDef="['rubro', 'saldo']"></tr>
         </table>
         <div class="border footer bold bg">
-          <p>Total del Activo</p>
+          <p>TOTAL DEL ACTIVO</p>
           <p>{{ getTotalActivo() }}</p>
         </div>
       </div>
@@ -58,9 +58,9 @@
       <div class="border">
         <table mat-table [dataSource]="parsearJson(patrimonioData[2][0].pasivos_corrientes)">
           <ng-container matColumnDef="rubro">
-            <th mat-header-cell *matHeaderCellDef class="header"><strong>Pasivo Corriente</strong></th>
+            <th mat-header-cell *matHeaderCellDef class="header"><strong>Pasivo corriente</strong></th>
             <td mat-cell *matCellDef="let element" class="capitalize">{{ element.rubro }}</td>
-            <td mat-footer-cell *matFooterCellDef class="bold subtotal">Total del Pasivo Corriente</td>
+            <td mat-footer-cell *matFooterCellDef class="bold subtotal">Total del pasivo corriente</td>
           </ng-container>
         
           <ng-container matColumnDef="saldo">
@@ -78,9 +78,9 @@
       <div class="border">
         <table mat-table [dataSource]="parsearJson(patrimonioData[3][0].pasivos_no_corrientes)">
           <ng-container matColumnDef="rubro">
-            <th mat-header-cell *matHeaderCellDef class="header"><strong>Pasivo No Corriente</strong></th>
+            <th mat-header-cell *matHeaderCellDef class="header"><strong>Pasivo no corriente</strong></th>
             <td mat-cell *matCellDef="let element" class="capitalize">{{ element.rubro }}</td>
-            <td mat-footer-cell *matFooterCellDef class="bold subtotal">Total del Pasivo No Corriente</td>
+            <td mat-footer-cell *matFooterCellDef class="bold subtotal">Total del pasivo no corriente</td>
           </ng-container>
         
           <ng-container matColumnDef="saldo">
@@ -95,16 +95,16 @@
         </table>
       </div>
       <div class="footer bold border bg">
-        <p>Total del Pasivo</p>
+        <p>TOTAL DEL PASIVO</p>
         <p>{{ getTotalPasivo() }}</p>
       </div>
       <div class="footer bold border-right subtotal">
-        <p>Patrimonio Neto</p>
+        <p>PATRIMONIO NETO</p>
         <p>{{ getTotalPatrimonioNeto() }}</p>
       </div>
       <div class="border footer bold bg">
-        <p>Total del Pasivo y Patrim. Neto</p>
-        <p>{{ totalPasivoYPatrimonioNeto() }}</p>
+        <p>TOTAL DEL PASIVO Y PATRIM. NETO</p>
+        <p>{{ getPasivoYPatrimonioNeto() }}</p>
       </div>
     </div>
   </div>

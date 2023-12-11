@@ -13,17 +13,20 @@
                 <mat-option *ngFor="let cuenta of cuentasApi" [value]="cuenta.id_cuenta" class="capitalize" [disabled]="cuentasDeshabilitadas.includes(cuenta.id_cuenta)">{{ cuenta.nombre }}</mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-form-field>
-            <!-- cuando ingresa en el Debe, el valor tiene que ser positivo -->
-            <mat-label>Ingrese el Debe</mat-label>
-            <input matInput type="number" step=0.01 [(ngModel)]="debe" name="debe" min="0" pattern="[0-9]+(\.[0-9]+)?">
-        </mat-form-field>
-        <mat-form-field>
-            <!-- cuando ingresa en el Haber, el valor tiene que ser negativo -->
-            <mat-label>Ingrese el Haber</mat-label>
-            <input matInput type="number" step=0.01 [(ngModel)]="haber" name="haber" min="0" pattern="[0-9]+(\.[0-9]+)?">
-        </mat-form-field>
-        <button mat-raised-button (click)="agregarCuenta()">Agregar cuenta</button>
+        <div class="contenedor">
+            <mat-form-field>
+                <!-- cuando ingresa en el Debe, el valor tiene que ser positivo -->
+                <mat-label>Ingrese el Debe</mat-label>
+                <input matInput type="number" step=0.01 [(ngModel)]="debe" name="debe" min="0" pattern="[0-9]+(\.[0-9]+)?">
+            </mat-form-field>
+            <mat-form-field>
+                <!-- cuando ingresa en el Haber, el valor tiene que ser negativo -->
+                <mat-label>Ingrese el Haber</mat-label>
+                <input matInput type="number" step=0.01 [(ngModel)]="haber" name="haber" min="0" pattern="[0-9]+(\.[0-9]+)?">
+            </mat-form-field>
+            <button mat-raised-button (click)="agregarCuenta()">Agregar cuenta</button>
+        </div>
+
         <!-- Tabla para previsualizar el asiento -->
         <mat-card>
             <table mat-table [dataSource]="dataSource" class="table mat-elevation-z8" *ngIf="mostrarTabla">

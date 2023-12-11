@@ -64,7 +64,6 @@ export class PatrimonialComponent implements OnInit {
         }
       }
     }
-  
     return total;
   }
   getTotalActivoCorriente(): number {
@@ -88,7 +87,7 @@ export class PatrimonialComponent implements OnInit {
   getTotalPatrimonioNeto(): number {
     return this.getTotales('patrimonio_neto');
   }
-  totalPasivoYPatrimonioNeto(): number {
-    return this.getTotalPasivo() + this.getTotalPatrimonioNeto();
+  getPasivoYPatrimonioNeto(): number {
+    return this.getTotales('pasivo_patrimonio_neto');
   }
 }

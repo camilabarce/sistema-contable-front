@@ -13,8 +13,8 @@
     margin: auto;
     margin-bottom: 4rem;
 }
-.capitalize{
-    text-transform: capitalize;
+.capitalize::first-letter {
+    text-transform: uppercase;
 }
 .btn {
     height: 3.4rem;
@@ -31,4 +31,19 @@
 }
 .table{
     width: 70vh;
+}
+.contenedor {
+    display: flex;
+    justify-content: space-between;
+}
+@media screen and (max-width: 768px) {
+    .contenedor {
+        flex-direction: column; 
+        margin: auto;
+        width: 90vw;
+        margin-top: 0;
+    }
+    .form {
+        width: 90vw;
+    }
 }

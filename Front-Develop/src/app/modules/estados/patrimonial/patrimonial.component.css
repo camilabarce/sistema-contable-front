@@ -19,20 +19,20 @@
     padding-bottom: 1rem;
     align-items: center;
 }
-.header{
+.header {
     font-family: Roboto, sans-serif;
     letter-spacing: .0125em;
     font-size: 0.97rem;
     color: rgb(230, 218, 195);
     background-color: #673ab7 !important;
 }
-.capitalize{
-    text-transform: capitalize;
+.capitalize::first-letter {
+    text-transform: uppercase;
 }
-.gap{
+.gap {
     gap: 5rem;
 }
-.subtotal{
+.subtotal {
     font-family: Roboto, sans-serif;
     letter-spacing: .0125em;
     font-size: 0.97rem;
