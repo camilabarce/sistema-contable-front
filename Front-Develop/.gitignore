@@ -1,0 +1,32 @@
+# Dependencias
+node_modules/
+
+# Archivos generados por el compilador de Angular
+/dist
+.angular/
+
+# Archivos de configuración de IDE
+.vscode/
+.idea/
+
+# Archivos de respaldo
+*.bak
+*.swp
+
+# Archivos de registro
+*.log
+
+# Archivos de compilación
+*.o
+*.obj
+
+# Archivos de ejecutables
+*.exe
+*.out
+
+# Archivos de caché
+*.cache
+*.tmp
+
+# Archivos de respaldo de editor
+*~
