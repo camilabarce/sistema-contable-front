@@ -1,23 +1,23 @@
 #Ignoramos el archivo .env que contiene credenciales importantes de nuestro proyecto, como el ingreso a DB.
-Back-Develop/.env
+/.env
 
 #node_modules
-Back-Develop/node_modules
+/node_modules
 
 # Carpetas
-Front-Develop/temp/
-Front-Develop/tmp/
+/temp/
+/tmp/
 
-Front-Develop/logs/
-Front-Develop/docs/
+/logs/
+/docs/
 
-Front-Develop/bundle/
-Front-Develop/build/
-Front-Develop/dist/
+/bundle/
+/build/
+/dist/
 
-Front-Develop/.angular/
-Front-Develop/node_modules/
-Front-Develop/.vscode/
+/.angular/
+/node_modules/
+/.vscode/
 
 # Archivos
 *.swp
