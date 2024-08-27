@@ -1,5 +1,7 @@
 # Sistema Contable
 
+Aplicación web para visualizar Plan de Cuentas, crear y editar Libro Diario y generar Estados Contables.
+
 ### Requerimientos para ejecutar el proyecto:
 
 * Node.js (https://nodejs.org/en/download)
